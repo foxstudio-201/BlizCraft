@@ -248,7 +248,7 @@ public final class Dialogs {
             return;
         }
         CurrencyProvider provider = gui.currencies().get(currencyId);
-        if (provider == null || !provider.available()) {
+        if (provider == null || !gui.currencies().isAvailable(provider)) {
             gui.messages().send(player, "exchange.unavailable", Messages.ph("currency", String.valueOf(currencyId)));
             return;
         }

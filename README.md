@@ -126,7 +126,7 @@ Quy đổi hai chiều:
 
 ## Cài đặt nhanh
 
-1. Tải `BlizPocket-1.0.2.jar` từ repo hoặc build từ source.
+1. Tải `BlizPocket-1.0.3.jar` từ repo hoặc build từ source.
 2. Bỏ vào `plugins/`.
 3. Cài các dependency cần dùng (Vault/EssentialsX, PlayerPoints, Geyser/Floodgate...).
 4. Khởi động server.
@@ -167,7 +167,7 @@ mvn clean package
 Jar đầu ra:
 
 ```text
-target/BlizPocket-1.0.2.jar
+target/BlizPocket-1.0.3.jar
 ```
 
 Repo không chứa thư viện server, jar Paper hay dữ liệu chạy thử.
@@ -340,8 +340,8 @@ Chi tiết: [Bedrock Setup](https://github.com/foxstudio-201/BlizCraft/wiki/Bedr
 - Workflow `.github/workflows/release.yml` build Maven và tạo GitHub Release theo tag/version.
 - Phát hành bằng tag:
   ```bash
-  git tag v1.0.2
-  git push origin v1.0.2
+  git tag v1.0.4
+  git push origin v1.0.4
   ```
 - Hoặc chạy tay: **Actions → Release → Run workflow**.
 - Plugin kiểm tra bản mới **một lần khi server khởi động xong** bằng `ServerLoadEvent` (`STARTUP`), không polling định kỳ. Restart server sẽ kiểm tra lại.

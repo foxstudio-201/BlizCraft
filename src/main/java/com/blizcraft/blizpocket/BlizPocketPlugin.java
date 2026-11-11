@@ -58,7 +58,7 @@ public final class BlizPocketPlugin extends JavaPlugin {
         game.start();
         getServer().getScheduler().runTaskLater(this, () -> {
             currencies.refresh();
-            long available = currencies.providers().stream().filter(p -> p.available()).count();
+            long available = currencies.availableProviders().size();
             getLogger().info("BlizPocket sẵn sàng. Loại tiền khả dụng: " + available + "/" + currencies.providers().size() + ".");
         }, 40L);
         getLogger().info("BlizPocket đã bật. BlizCoin: " + settings.baseName + ".");

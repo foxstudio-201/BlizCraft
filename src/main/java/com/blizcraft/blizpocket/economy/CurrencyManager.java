@@ -41,36 +41,29 @@ public final class CurrencyManager {
 
         ConfigurationSection vault = config.getConfigurationSection("currencies.vault");
         if (vault != null && vault.getBoolean("enabled", true)) {
-            try {
-                register(new VaultProvider(
-                        vault.getString("display", "Xu (Vault)"),
-                        material(vault.getString("icon", "GOLD_INGOT"), Material.GOLD_INGOT),
-                        rate(vault.getDouble("rate", 1.0), "vault")
-                ));
-                aliases("vault", "eco", "economy", "essentials", "xu");
-            } catch (Throwable error) {
-                plugin.getLogger().warning("Không nạp được Vault, bỏ qua loại tiền Vault. Các loại tiền khác vẫn hoạt động.");
-            }
+            registerOptional("Vault", () -> new VaultProvider(
+                    vault.getString("display", "Xu (Vault)"),
+                    material(vault.getString("icon", "GOLD_INGOT"), Material.GOLD_INGOT),
+                    rate(vault.getDouble("rate", 1.0), "vault")
+            ), "vault", "eco", "economy", "essentials", "xu");
         }
 
         ConfigurationSection points = config.getConfigurationSection("currencies.playerpoints");
         if (points != null && points.getBoolean("enabled", true)) {
-            register(new PlayerPointsProvider(
+            registerOptional("PlayerPoints", () -> new PlayerPointsProvider(
                     points.getString("display", "PlayerPoints"),
                     material(points.getString("icon", "AMETHYST_SHARD"), Material.AMETHYST_SHARD),
                     rate(points.getDouble("rate", 100.0), "playerpoints")
-            ));
-            aliases("playerpoints", "points", "point", "pp", "playerpoint");
+            ), "playerpoints", "points", "point", "pp", "playerpoint");
         }
 
         ConfigurationSection xp = config.getConfigurationSection("currencies.experience");
         if (xp != null && xp.getBoolean("enabled", false)) {
-            register(new ExperienceProvider(
+            registerOptional("Experience", () -> new ExperienceProvider(
                     xp.getString("display", "Cấp kinh nghiệm"),
                     material(xp.getString("icon", "EXPERIENCE_BOTTLE"), Material.EXPERIENCE_BOTTLE),
                     rate(xp.getDouble("rate", 500.0), "experience")
-            ));
-            aliases("experience", "exp", "xp", "level", "levels", "cap");
+            ), "experience", "exp", "xp", "level", "levels", "cap");
         }
 
         ConfigurationSection items = config.getConfigurationSection("currencies.items");
@@ -85,15 +78,19 @@ public final class CurrencyManager {
                         plugin.getLogger().warning("Bỏ qua item currency không hợp lệ: " + key);
                         continue;
                     }
-                    ItemProvider provider = new ItemProvider(
-                            material,
-                            entry.getString("display", key),
-                            rate(entry.getDouble("rate", 1.0), key)
-                    );
-                    register(provider);
-                    lookup.put(provider.id().toLowerCase(Locale.ROOT), provider);
-                    lookup.put(key.toLowerCase(Locale.ROOT), provider);
-                    lookup.put(material.name().toLowerCase(Locale.ROOT), provider);
+                    try {
+                        ItemProvider provider = new ItemProvider(
+                                material,
+                                entry.getString("display", key),
+                                rate(entry.getDouble("rate", 1.0), key)
+                        );
+                        register(provider);
+                        lookup.put(provider.id().toLowerCase(Locale.ROOT), provider);
+                        lookup.put(key.toLowerCase(Locale.ROOT), provider);
+                        lookup.put(material.name().toLowerCase(Locale.ROOT), provider);
+                    } catch (Throwable error) {
+                        plugin.getLogger().warning("Bỏ qua item currency " + key + ", các loại tiền khác vẫn hoạt động.");
+                    }
                 }
             }
         }
@@ -105,24 +102,46 @@ public final class CurrencyManager {
                 for (String key : entries.getKeys(false)) {
                     ConfigurationSection entry = entries.getConfigurationSection(key);
                     if (entry == null) continue;
-                    CustomCommandProvider provider = new CustomCommandProvider(
-                            key,
-                            entry.getString("display", key),
-                            material(entry.getString("icon", "EMERALD"), Material.EMERALD),
-                            rate(entry.getDouble("rate", 1.0), key),
-                            entry.getString("balance-placeholder", ""),
-                            entry.getString("withdraw-command", ""),
-                            entry.getString("deposit-command", "")
-                    );
-                    register(provider);
-                    lookup.put(provider.id().toLowerCase(Locale.ROOT), provider);
-                    lookup.put(key.toLowerCase(Locale.ROOT), provider);
+                    try {
+                        CustomCommandProvider provider = new CustomCommandProvider(
+                                key,
+                                entry.getString("display", key),
+                                material(entry.getString("icon", "EMERALD"), Material.EMERALD),
+                                rate(entry.getDouble("rate", 1.0), key),
+                                entry.getString("balance-placeholder", ""),
+                                entry.getString("withdraw-command", ""),
+                                entry.getString("deposit-command", "")
+                        );
+                        register(provider);
+                        lookup.put(provider.id().toLowerCase(Locale.ROOT), provider);
+                        lookup.put(key.toLowerCase(Locale.ROOT), provider);
+                    } catch (Throwable error) {
+                        plugin.getLogger().warning("Bỏ qua custom currency " + key + ", các loại tiền khác vẫn hoạt động.");
+                    }
                 }
             }
         }
 
-        long available = providers.stream().filter(CurrencyProvider::available).count();
+        long available = providers.stream().filter(this::isAvailable).count();
         plugin.getLogger().info("Đã nạp " + providers.size() + " loại tiền, khả dụng: " + available + ".");
+    }
+
+    private void registerOptional(String label, java.util.function.Supplier<CurrencyProvider> factory, String... names) {
+        try {
+            CurrencyProvider provider = factory.get();
+            register(provider);
+            aliases(provider.id(), names);
+        } catch (Throwable error) {
+            plugin.getLogger().warning("Không nạp được " + label + ", bỏ qua. Các loại tiền khác vẫn hoạt động.");
+        }
+    }
+
+    public boolean isAvailable(CurrencyProvider provider) {
+        try {
+            return provider.available();
+        } catch (Throwable error) {
+            return false;
+        }
     }
 
     private void aliases(String id, String... names) {
@@ -168,7 +187,7 @@ public final class CurrencyManager {
     public List<CurrencyProvider> availableProviders() {
         List<CurrencyProvider> result = new ArrayList<>();
         for (CurrencyProvider provider : providers) {
-            if (provider.available()) result.add(provider);
+            if (isAvailable(provider)) result.add(provider);
         }
         return result;
     }
@@ -177,7 +196,7 @@ public final class CurrencyManager {
         if (!settings.exchangeEnabled) return ExchangeResult.fail("exchange.disabled");
         CurrencyProvider provider = get(id);
         if (provider == null) return ExchangeResult.fail("general.invalid-currency");
-        if (!provider.available()) return ExchangeResult.fail("exchange.unavailable");
+        if (!isAvailable(provider)) return ExchangeResult.fail("exchange.unavailable");
         if (amount <= 0) return ExchangeResult.fail("exchange.invalid-amount");
         long coins = (long) Math.floor(amount * provider.rate() * feeFactor());
         if (coins <= 0) return ExchangeResult.fail("exchange.invalid-amount");
@@ -194,7 +213,7 @@ public final class CurrencyManager {
         if (!settings.exchangeAllowWithdraw) return ExchangeResult.fail("exchange.withdraw-disabled");
         CurrencyProvider provider = get(id);
         if (provider == null) return ExchangeResult.fail("general.invalid-currency");
-        if (!provider.available()) return ExchangeResult.fail("exchange.unavailable");
+        if (!isAvailable(provider)) return ExchangeResult.fail("exchange.unavailable");
         if (amount <= 0) return ExchangeResult.fail("exchange.invalid-amount");
         double factor = feeFactor();
         if (provider.rate() <= 0 || factor <= 0) return ExchangeResult.fail("exchange.unavailable");
@@ -222,14 +241,17 @@ public final class CurrencyManager {
     public List<String> availableIds() {
         List<String> ids = new ArrayList<>();
         for (CurrencyProvider provider : providers) {
-            if (provider.available()) ids.add(provider.id());
+            if (isAvailable(provider)) ids.add(provider.id());
         }
         return ids;
     }
 
     public void refresh() {
         for (CurrencyProvider provider : providers) {
-            provider.refresh();
+            try {
+                provider.refresh();
+            } catch (Throwable ignored) {
+            }
         }
     }
 

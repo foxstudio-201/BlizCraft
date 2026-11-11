@@ -28,7 +28,7 @@ Chào mừng đến wiki của **BlizPocket** — plugin Tài Xỉu (Sic Bo) cho
 
 ## Thông tin phiên bản
 
-- BlizPocket: `1.0.2`
+- BlizPocket: `1.0.3`
 - Paper: `26.2` (test build 135)
 - Java: `25`
 - License: GPL-3.0
