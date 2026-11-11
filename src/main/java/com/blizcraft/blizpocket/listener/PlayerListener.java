@@ -21,5 +21,6 @@ public final class PlayerListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         plugin.getGame().handleQuit(event.getPlayer());
+        plugin.getGuis().clearNavigation(event.getPlayer());
     }
 }

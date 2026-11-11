@@ -106,7 +106,7 @@ public final class Dialogs {
                     if (audience instanceof Player p) gui.openHelp(p);
                 })));
         player.showDialog(build(messages.comp("dialog.menu.title"), body, List.of(), actions,
-                messages.comp("dialog.menu.close")));
+                messages.comp("dialog.menu.close"), false));
     }
 
     public void openRegister(Player player) {
@@ -156,7 +156,7 @@ public final class Dialogs {
                     if (audience instanceof Player p) gui.openHistory(p, 0);
                 })),
                 button(messages.comp("dialog.account.exchange"), custom((view, audience) -> {
-                    if (audience instanceof Player p) gui.openExchange(p);
+                    if (audience instanceof Player p) gui.openExchange(p, () -> gui.openAccount(p, null));
                 })),
                 button(messages.comp(account.titleEnabled()
                                 ? "dialog.account.toggle-title-off"
@@ -164,7 +164,7 @@ public final class Dialogs {
                         custom((view, audience) -> {
                             if (audience instanceof Player p) {
                                 gui.game().toggleTitle(p);
-                                gui.openAccount(p);
+                                gui.openAccount(p, null);
                             }
                         })),
                 button(messages.comp("dialog.account.menu"), custom((view, audience) -> {
@@ -297,7 +297,7 @@ public final class Dialogs {
             if (audience instanceof Player p) executeExchange(p, currencyId, deposit, max);
         })));
         actions.add(button(messages.comp("dialog.exchange.back"), custom((view, audience) -> {
-            if (audience instanceof Player p) gui.openExchange(p);
+            if (audience instanceof Player p) gui.back(p);
         })));
         player.showDialog(build(messages.comp("dialog.exchange.amount-title", ph),
                 messages.raw("dialog.exchange.amount-body", ph), inputs, actions,
@@ -341,7 +341,7 @@ public final class Dialogs {
             }
             game.play(player, "exchange");
             gui.data().saveAsync();
-            gui.openExchange(player);
+            gui.back(player);
         } else {
             sendExchangeError(player, result, provider);
             playerRefSchedule(player, () -> openExchangeAmount(player, currencyId, deposit));
@@ -583,6 +583,11 @@ public final class Dialogs {
 
     private Dialog build(Component title, String bodyRaw, List<DialogInput> inputs,
                          List<ActionButton> actions, Component closeLabel) {
+        return build(title, bodyRaw, inputs, actions, closeLabel, true);
+    }
+
+    private Dialog build(Component title, String bodyRaw, List<DialogInput> inputs,
+                         List<ActionButton> actions, Component closeLabel, boolean backToPrevious) {
         List<DialogBody> body = new ArrayList<>();
         for (String line : bodyRaw.split("\\R", -1)) {
             body.add(DialogBody.plainMessage(Text.mm(line), 300));
@@ -594,12 +599,19 @@ public final class Dialogs {
                 .inputs(inputs)
                 .pause(false)
                 .afterAction(DialogBase.DialogAfterAction.CLOSE)
-                .canCloseWithEscape(true)
+                .canCloseWithEscape(!backToPrevious)
                 .build();
 
-        ActionButton exit = ActionButton.builder(closeLabel)
+        ActionButton exit = ActionButton.builder(backToPrevious ? messages().comp("dialog.back") : closeLabel)
                 .width(150)
-                .action(custom((view, audience) -> audience.closeDialog()))
+                .action(custom((view, audience) -> {
+                    if (!(audience instanceof Player p)) {
+                        audience.closeDialog();
+                        return;
+                    }
+                    if (backToPrevious) gui.back(p);
+                    else p.closeDialog();
+                }))
                 .build();
         DialogType type = actions.isEmpty()
                 ? DialogType.notice(exit)

@@ -342,6 +342,7 @@ gui:
     filler-name: "<black> </black>"
 
 dialog:
+  back: "<gray>« Quay lại</gray>"
   menu:
     title: "<gradient:#ffd166:#ef476f><bold>BlizPocket</bold></gradient>"
     body: "<gray>Tài: tổng 11-17. Xỉu: tổng 4-10. Bộ ba: nhà cái thắng.</gray>\n<gray>Số dư: <gold>{balance} {symbol}</gold> | Trong phòng: <white>{room}</white></gray>\n<gray>Hũ tích luỹ: <gold>{jackpot} {symbol}</gold></gray>"

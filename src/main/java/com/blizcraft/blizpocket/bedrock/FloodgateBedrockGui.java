@@ -147,6 +147,7 @@ public final class FloodgateBedrockGui implements BedrockGui {
                         openMainMenu(player);
                     }
                 })
+                .closedResultHandler(() -> gui.back(player))
                 .build();
         send(player, form);
     }
@@ -199,6 +200,7 @@ public final class FloodgateBedrockGui implements BedrockGui {
                         }
                     }
                 })
+                .closedResultHandler(() -> gui.back(player))
                 .build();
         send(player, form);
     }
@@ -245,6 +247,7 @@ public final class FloodgateBedrockGui implements BedrockGui {
             else if (id == 1 && gui.settings().exchangeAllowWithdraw) openExchangeAmount(player, null, false);
             else openMainMenu(player);
         });
+        builder.closedResultHandler(() -> gui.back(player));
         send(player, builder.build());
     }
 
@@ -331,6 +334,7 @@ public final class FloodgateBedrockGui implements BedrockGui {
                         openExchangeAmount(player, provider.id(), deposit);
                     }
                 })
+                .closedResultHandler(() -> gui.back(player))
                 .build();
         send(player, form);
     }
@@ -364,6 +368,7 @@ public final class FloodgateBedrockGui implements BedrockGui {
                     if (gui.game().placeBet(player, side, amount)) gui.openBet(player);
                     else openCustomBet(player);
                 })
+                .closedResultHandler(() -> gui.back(player))
                 .build();
         send(player, form);
     }
@@ -419,6 +424,7 @@ public final class FloodgateBedrockGui implements BedrockGui {
                     if (contract != null) gui.openCollateral(player);
                     else openPledge(player, chosen);
                 })
+                .closedResultHandler(() -> gui.back(player))
                 .build();
         send(player, form);
     }
@@ -452,6 +458,7 @@ public final class FloodgateBedrockGui implements BedrockGui {
                     if (response.clickedFirst()) gui.collateral().repay(player, current.id());
                     gui.openCollateral(player);
                 })
+                .closedResultHandler(() -> gui.back(player))
                 .build();
         send(player, form);
     }
@@ -485,6 +492,7 @@ public final class FloodgateBedrockGui implements BedrockGui {
                 .content(legacy("dialog.session.body", ph))
                 .button(legacy("dialog.session.close", ph))
                 .validResultHandler((SimpleFormResponse response) -> click(player))
+                .closedResultHandler(() -> gui.back(player))
                 .build();
         send(player, form);
     }
@@ -502,6 +510,7 @@ public final class FloodgateBedrockGui implements BedrockGui {
                 .content(legacy("dialog.jackpot.body", ph))
                 .button(legacy("dialog.jackpot.close", ph))
                 .validResultHandler((SimpleFormResponse response) -> click(player))
+                .closedResultHandler(() -> gui.back(player))
                 .build();
         send(player, form);
     }
@@ -513,6 +522,7 @@ public final class FloodgateBedrockGui implements BedrockGui {
                 .content(legacy("dialog.help.body", ph()))
                 .button(legacy("dialog.help.close", ph()))
                 .validResultHandler((SimpleFormResponse response) -> click(player))
+                .closedResultHandler(() -> gui.back(player))
                 .build();
         send(player, form);
     }
@@ -524,6 +534,7 @@ public final class FloodgateBedrockGui implements BedrockGui {
                 .content(legacyComponent(Text.mm(body)))
                 .button(legacy("dialog.menu.close", ph()))
                 .validResultHandler((SimpleFormResponse response) -> click(player))
+                .closedResultHandler(() -> gui.back(player))
                 .build();
         send(player, form);
     }

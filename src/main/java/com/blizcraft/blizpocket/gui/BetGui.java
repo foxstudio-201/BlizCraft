@@ -220,11 +220,11 @@ public final class BetGui implements InventoryHolder {
     public void handleClick(int slot, ClickType clickType) {
         gui.game().play(player, "click");
         if (slot == 4) {
-            gui.openJackpot(player);
+            gui.openJackpot(player, () -> gui.openBet(player));
             return;
         }
         if (slot == 8) {
-            gui.openHelp(player);
+            gui.openHelp(player, () -> gui.openBet(player));
             return;
         }
         if (slot == 22 && !gui.game().isInRoom(player)) {
@@ -280,9 +280,9 @@ public final class BetGui implements InventoryHolder {
                 update();
             }
             case 49 -> gui.openCustomBet(player);
-            case 50 -> gui.openAccount(player);
+            case 50 -> gui.openAccount(player, () -> gui.openBet(player));
             case 51 -> gui.openHistory(player, 0);
-            case 52 -> gui.openExchange(player);
+            case 52 -> gui.openExchange(player, () -> gui.openBet(player));
             case 53 -> {
                 if (clickType.isShiftClick() && gui.game().isInRoom(player)) {
                     gui.game().leaveRoom(player);

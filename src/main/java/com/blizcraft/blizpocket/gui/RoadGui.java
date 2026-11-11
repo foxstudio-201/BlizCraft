@@ -87,7 +87,7 @@ public final class RoadGui implements InventoryHolder {
             int index = page * PAGE_SIZE + slot;
             List<SessionRecord> sessions = gui.game().data().sessions();
             if (index < sessions.size()) {
-                gui.openSessionDetail(player, sessions.get(index));
+                gui.openSessionDetail(player, sessions.get(index), () -> gui.openRoad(player, page));
             }
             return;
         }
