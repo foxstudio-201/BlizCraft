@@ -68,6 +68,8 @@
 - **Vật phẩm** (kim cương, ngọc, vàng... cấu hình tỉ giá).
 - **Custom currency** qua PlaceholderAPI + lệnh console.
 
+Mỗi nguồn tiền là **tùy chọn**: thiếu Vault/PlayerPoints/PlaceholderAPI thì plugin chỉ bỏ qua nguồn đó (log cảnh báo), BlizCoin và các nguồn còn lại vẫn hoạt động bình thường. Không cần cài đủ tất cả.
+
 Quy đổi hai chiều:
 - Nạp ngoại tệ → BlizCoin.
 - Rút BlizCoin → ngoại tệ, có chọn loại tiền, mốc sẵn, tất cả và số lượng tùy chỉnh.
@@ -124,7 +126,7 @@ Quy đổi hai chiều:
 
 ## Cài đặt nhanh
 
-1. Tải `BlizPocket-1.0.1.jar` từ repo hoặc build từ source.
+1. Tải `BlizPocket-1.0.2.jar` từ repo hoặc build từ source.
 2. Bỏ vào `plugins/`.
 3. Cài các dependency cần dùng (Vault/EssentialsX, PlayerPoints, Geyser/Floodgate...).
 4. Khởi động server.
@@ -165,7 +167,7 @@ mvn clean package
 Jar đầu ra:
 
 ```text
-target/BlizPocket-1.0.1.jar
+target/BlizPocket-1.0.2.jar
 ```
 
 Repo không chứa thư viện server, jar Paper hay dữ liệu chạy thử.

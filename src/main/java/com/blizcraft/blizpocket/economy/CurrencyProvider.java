@@ -20,6 +20,9 @@ public interface CurrencyProvider {
 
     boolean deposit(Player player, long amount);
 
+    default void refresh() {
+    }
+
     default String note() {
         return "";
     }

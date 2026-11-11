@@ -28,6 +28,8 @@ currencies:
 | `item:<MATERIAL>` | Không | Vật phẩm trong túi |
 | `custom:<key>` | PlaceholderAPI | Đọc balance + lệnh console |
 
+**Mọi nguồn tiền đều tùy chọn.** Thiếu plugin tương ứng thì nguồn đó tự bị bỏ qua (log cảnh báo), không làm tắt BlizPocket; BlizCoin và các nguồn còn lại vẫn chạy bình thường. Chỉ những nguồn khả dụng mới hiện trong GUI quy đổi; nếu không có nguồn ngoài nào, GUI báo "không có loại tiền ngoài khả dụng".
+
 ### Alias
 
 - Vault: `vault`, `eco`, `economy`, `essentials`, `xu`

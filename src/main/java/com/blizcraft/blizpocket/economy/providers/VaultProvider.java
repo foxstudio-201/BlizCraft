@@ -21,6 +21,7 @@ public final class VaultProvider implements CurrencyProvider {
         refresh();
     }
 
+    @Override
     public void refresh() {
         try {
             RegisteredServiceProvider<Economy> registration = Bukkit.getServicesManager().getRegistration(Economy.class);

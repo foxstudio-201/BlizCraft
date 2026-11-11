@@ -4,15 +4,15 @@
 
 Version nằm trong:
 
-- `pom.xml` — `<version>1.0.1</version>`
-- `src/main/resources/plugin.yml` — `version: 1.0.1`
+- `pom.xml` — `<version>1.0.2</version>`
+- `src/main/resources/plugin.yml` — `version: 1.0.2`
 
 Khi phát hành bản mới, tăng cả hai (hoặc dùng script) rồi commit.
 
 Ví dụ:
 
 ```text
-1.0.1 -> 1.0.2
+1.0.2 -> 1.0.3
 ```
 
 ---
@@ -36,11 +36,11 @@ Workflow:
 ### Cách phát hành bằng tag
 
 ```bash
-git tag v1.0.2
-git push origin v1.0.2
+git tag v1.0.3
+git push origin v1.0.3
 ```
 
-Workflow `Release` tự chạy và tạo release `v1.0.2`.
+Workflow `Release` tự chạy và tạo release `v1.0.3`.
 
 ### Cách phát hành thủ công
 
@@ -99,15 +99,15 @@ update-checker:
 
 - Bỏ tiền tố `v`.
 - So sánh từng phần số.
-- `1.0.1` mới hơn `1.0.0`.
-- `1.0.0` không báo nếu release cũng `1.0.0`.
+- `1.0.2` mới hơn `1.0.1`.
+- `1.0.1` không báo nếu release cũng `1.0.1`.
 - Phần `-beta` được bỏ qua khi so sánh cơ bản.
 
 Ví dụ:
 
-- Local `1.0.0`, release `v1.0.1` → báo.
-- Local `1.0.0`, release `v1.0.0` → không báo.
-- Local `1.0.1`, release `v1.0.0` → không báo.
+- Local `1.0.1`, release `v1.0.2` → báo.
+- Local `1.0.1`, release `v1.0.1` → không báo.
+- Local `1.0.2`, release `v1.0.1` → không báo.
 
 ---
 
@@ -123,8 +123,8 @@ Ví dụ:
 5. Commit.
 6. Tạo tag:
    ```bash
-   git tag v1.0.2
-   git push origin v1.0.2
+   git tag v1.0.3
+   git push origin v1.0.3
    ```
 7. Chờ workflow Release thành công.
 8. Restart server để update checker kiểm tra bản mới.

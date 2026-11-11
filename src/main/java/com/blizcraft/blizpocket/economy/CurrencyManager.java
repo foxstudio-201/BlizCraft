@@ -41,12 +41,16 @@ public final class CurrencyManager {
 
         ConfigurationSection vault = config.getConfigurationSection("currencies.vault");
         if (vault != null && vault.getBoolean("enabled", true)) {
-            register(new VaultProvider(
-                    vault.getString("display", "Xu (Vault)"),
-                    material(vault.getString("icon", "GOLD_INGOT"), Material.GOLD_INGOT),
-                    rate(vault.getDouble("rate", 1.0), "vault")
-            ));
-            aliases("vault", "eco", "economy", "essentials", "xu");
+            try {
+                register(new VaultProvider(
+                        vault.getString("display", "Xu (Vault)"),
+                        material(vault.getString("icon", "GOLD_INGOT"), Material.GOLD_INGOT),
+                        rate(vault.getDouble("rate", 1.0), "vault")
+                ));
+                aliases("vault", "eco", "economy", "essentials", "xu");
+            } catch (Throwable error) {
+                plugin.getLogger().warning("Không nạp được Vault, bỏ qua loại tiền Vault. Các loại tiền khác vẫn hoạt động.");
+            }
         }
 
         ConfigurationSection points = config.getConfigurationSection("currencies.playerpoints");
@@ -225,7 +229,7 @@ public final class CurrencyManager {
 
     public void refresh() {
         for (CurrencyProvider provider : providers) {
-            if (provider instanceof VaultProvider vault) vault.refresh();
+            provider.refresh();
         }
     }
 
