@@ -35,10 +35,15 @@ bedrock:
   address: 0.0.0.0
   port: 19132
 
+# Geyser 2.12 dùng NetherNet/WebRTC. Đặt "both" để vừa nhận
+# kết nối RakNet cũ vừa nhận NetherNet.
+transport: both
+
 remote:
   address: 127.0.0.1
   port: 25565
   auth-type: floodgate
+  webrtc-port: 19133
 ```
 
 4. Floodgate tạo `plugins/Floodgate/key.pem`.
@@ -79,9 +84,9 @@ IP-LAN-của-máy-chủ:19132
 ```
 
 Internet:
-- Forward **TCP + UDP 19132**.
+- Forward **TCP + UDP 19132** và **UDP 19133** (NetherNet/WebRTC).
 - Geyser 2.12 dùng NetherNet/built-in signaling; cần mở đúng cả TCP/UDP nếu dùng ngoài mạng.
-- Nếu dùng firewall, cho phép Java và Geyser.
+- Nếu dùng firewall, cho phép Java, Geyser và cổng WebRTC.
 
 ---
 
@@ -119,9 +124,12 @@ Inventory GUI dùng chung:
 | Chọn loại tiền | Dropdown dialog | Dropdown form |
 | GUI cược | Inventory | Inventory (Geyser) |
 | Nút đóng | Dialog close | Form close |
+| Quay lại | Nút Back đúng màn hình trước | `closedResultHandler` đưa về GUI trước |
 | Anvil | Không dùng | Không dùng |
 
-Tất cả thao tác đều có âm thanh click.
+- Form con (tài khoản, quy đổi, hũ, chi tiết phiên, thế chấp) có nút quay lại menu/dialog trước đó.
+- Đóng form con bằng nút X cũng quay về màn hình trước, không đóng ra game.
+- Tất cả thao tác đều có âm thanh click.
 
 ---
 
@@ -134,8 +142,8 @@ Tất cả thao tác đều có âm thanh click.
 
 ### Bedrock vào không được
 Kiểm tra:
-1. Cổng `19132` UDP/TCP đã mở/forward chưa.
-2. `auth-type: floodgate` đúng chưa.
+1. Cổng `19132` UDP/TCP và `19133` UDP đã mở/forward chưa.
+2. `auth-type: floodgate` đúng chưa; `transport: both` và `webrtc-port: 19133` đã đặt chưa.
 3. Floodgate đã load trước Geyser chưa.
 4. `key.pem` tồn tại.
 5. Client Bedrock có được Geyser version hỗ trợ không.

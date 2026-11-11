@@ -28,8 +28,9 @@
 
 ### Phiên cược Tài Xỉu
 - 3 xúc xắc, tổng `4-10` là **XỈU**, `11-17` là **TÀI**.
-- Chu kỳ phiên: mở cược → khóa cược → quay xúc xắc → công bố kết quả → chờ phiên mới.
-- Đếm ngược khóa cược bằng title `5 → 1`.
+- Chu kỳ phiên: mở cược → 10 giây cuối khóa cược → quay xúc xắc → công bố kết quả → chờ phiên mới.
+- Không có pha khóa riêng: `lock-seconds` là số giây cuối của pha đặt cược.
+- Đếm ngược `10 → 1` bằng title trong những giây cuối.
 - Xúc xắc quay trực tiếp trên title bar.
 - Bossbar hiển thị phiên, thời gian, tổng cược **Tài/Xỉu** và **Hũ**.
 - Không có ai đặt cược vẫn quay xúc xắc và ghi lịch sử, không bỏ qua phiên.
@@ -80,6 +81,8 @@ Quy đổi hai chiều:
 - Bedrock: form native qua **Cumulus / Floodgate**.
 - Mọi thao tác chọn GUI/dialog đều có âm thanh click cấu hình được.
 - Mỗi player có thể bật/tắt title giữa màn hình; khi tắt vẫn còn bossbar.
+- Dialog/form con mở từ menu có nút **Quay lại** đúng màn hình trước đó (không đóng ra game).
+- Đóng form Bedrock bằng nút thoát cũng quay về GUI/dialog trước, không thoát ra ngoài.
 
 ### Thế chấp vật phẩm
 - Chỉ các vật phẩm nằm trong `collateral.allowed-items` mới được thế chấp.
@@ -121,7 +124,7 @@ Quy đổi hai chiều:
 
 ## Cài đặt nhanh
 
-1. Tải `BlizPocket-1.0.0.jar` từ repo hoặc build từ source.
+1. Tải `BlizPocket-1.0.1.jar` từ repo hoặc build từ source.
 2. Bỏ vào `plugins/`.
 3. Cài các dependency cần dùng (Vault/EssentialsX, PlayerPoints, Geyser/Floodgate...).
 4. Khởi động server.
@@ -162,7 +165,7 @@ mvn clean package
 Jar đầu ra:
 
 ```text
-target/BlizPocket-1.0.0.jar
+target/BlizPocket-1.0.1.jar
 ```
 
 Repo không chứa thư viện server, jar Paper hay dữ liệu chạy thử.
@@ -312,14 +315,18 @@ Cấu hình Geyser:
 ```yaml
 bedrock:
   port: 19132
+  # Geyser 2.12 dùng NetherNet/WebRTC
+transport: both
 
 remote:
   auth-type: floodgate
+  webrtc-port: 19133
 ```
 
 - Java: `IP:25565`
 - Bedrock: `IP:19132`
-- Mở Internet cần forward **TCP + UDP 19132** (Geyser 2.12 dùng NetherNet).
+- Mở Internet cần forward **TCP + UDP 19132** và **UDP 19133** (Geyser 2.12 dùng NetherNet/WebRTC).
+- Nếu Geyser báo cần protocol Java mới hơn Paper 26.2, giữ **ViaVersion**.
 - Plugin tự nhận người chơi Floodgate và dùng form Bedrock native.
 
 Chi tiết: [Bedrock Setup](https://github.com/foxstudio-201/BlizCraft/wiki/Bedrock-Setup).
@@ -331,8 +338,8 @@ Chi tiết: [Bedrock Setup](https://github.com/foxstudio-201/BlizCraft/wiki/Bedr
 - Workflow `.github/workflows/release.yml` build Maven và tạo GitHub Release theo tag/version.
 - Phát hành bằng tag:
   ```bash
-  git tag v1.0.1
-  git push origin v1.0.1
+  git tag v1.0.2
+  git push origin v1.0.2
   ```
 - Hoặc chạy tay: **Actions → Release → Run workflow**.
 - Plugin kiểm tra bản mới **một lần khi server khởi động xong** bằng `ServerLoadEvent` (`STARTUP`), không polling định kỳ. Restart server sẽ kiểm tra lại.

@@ -22,13 +22,13 @@ Chào mừng đến wiki của **BlizPocket** — plugin Tài Xỉu (Sic Bo) cho
 | [[Currency-and-Exchange]] | BlizCoin, Vault, PlayerPoints, item, tỉ giá |
 | [[Collateral]] | Thế chấp item, enchant, lãi, hạn, mất tài sản |
 | [[Data-and-Backups]] | File dữ liệu, lưu/backup/restore |
-| [[Bedrock-Setup]] | Geyser, Floodgate, ViaVersion, cổng 19132 |
+| [[Bedrock-Setup]] | Geyser, Floodgate, ViaVersion, cổng 19132/19133 |
 | [[Release-and-Updates]] | Release workflow, tag version, update checker |
 | [[Troubleshooting]] | Lỗi thường gặp và cách xử lý |
 
 ## Thông tin phiên bản
 
-- BlizPocket: `1.0.0`
+- BlizPocket: `1.0.1`
 - Paper: `26.2` (test build 135)
 - Java: `25`
 - License: GPL-3.0

@@ -4,15 +4,15 @@
 
 Version nằm trong:
 
-- `pom.xml` — `<version>1.0.0</version>`
-- `src/main/resources/plugin.yml` — `version: 1.0.0`
+- `pom.xml` — `<version>1.0.1</version>`
+- `src/main/resources/plugin.yml` — `version: 1.0.1`
 
 Khi phát hành bản mới, tăng cả hai (hoặc dùng script) rồi commit.
 
 Ví dụ:
 
 ```text
-1.0.0 -> 1.0.1
+1.0.1 -> 1.0.2
 ```
 
 ---
@@ -36,11 +36,11 @@ Workflow:
 ### Cách phát hành bằng tag
 
 ```bash
-git tag v1.0.1
-git push origin v1.0.1
+git tag v1.0.2
+git push origin v1.0.2
 ```
 
-Workflow `Release` tự chạy và tạo release `v1.0.1`.
+Workflow `Release` tự chạy và tạo release `v1.0.2`.
 
 ### Cách phát hành thủ công
 
@@ -123,8 +123,8 @@ Ví dụ:
 5. Commit.
 6. Tạo tag:
    ```bash
-   git tag v1.0.1
-   git push origin v1.0.1
+   git tag v1.0.2
+   git push origin v1.0.2
    ```
 7. Chờ workflow Release thành công.
 8. Restart server để update checker kiểm tra bản mới.

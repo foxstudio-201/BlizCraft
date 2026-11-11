@@ -17,11 +17,11 @@ Plugin có thể chạy chỉ với BlizCoin nội bộ, nhưng nên cài Vault 
 
 ## 2. Cài plugin
 
-1. Tải `BlizPocket-1.0.0.jar` từ [Releases](https://github.com/foxstudio-201/BlizCraft/releases) hoặc build từ source.
+1. Tải `BlizPocket-1.0.1.jar` từ [Releases](https://github.com/foxstudio-201/BlizCraft/releases) hoặc build từ source.
 2. Copy vào:
 
 ```text
-plugins/BlizPocket-1.0.0.jar
+plugins/BlizPocket-1.0.1.jar
 ```
 
 3. Cài các dependency vào `plugins/`:
@@ -65,7 +65,7 @@ mvn clean package
 Jar:
 
 ```text
-target/BlizPocket-1.0.0.jar
+target/BlizPocket-1.0.1.jar
 ```
 
 Repo không chứa thư viện server, jar Paper, dữ liệu hay log chạy thử.
@@ -110,9 +110,10 @@ op <tên>
 
 1. Backup `plugins/BlizPocket/`.
 2. Dừng server.
-3. Thay jar.
-4. Khởi động lại.
-5. Chạy `/txa reload` nếu chỉ sửa config/messages.
+3. Xóa jar cũ (`BlizPocket-<version_cũ>.jar`) — chỉ để **một** jar trong `plugins/` để tránh nạp trùng plugin.
+4. Thêm jar mới (`BlizPocket-1.0.1.jar`).
+5. Khởi động lại.
+6. Chạy `/txa reload` nếu chỉ sửa config/messages.
 
 Không xóa các file `.yml` dữ liệu khi nâng cấp, trừ khi muốn reset.
 

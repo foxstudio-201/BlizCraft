@@ -82,7 +82,7 @@ account:
 
 ---
 
-## 4. room
+## 4.1 room (phòng)
 
 ```yaml
 room:

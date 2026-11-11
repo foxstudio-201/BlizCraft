@@ -83,6 +83,14 @@ Có thể mở thẳng cửa sổ số lượng:
 /tx doicuoc diamond rut
 ```
 
+### Điều hướng quay lại
+
+- Dialog/form mở từ menu chính có nút **Quay lại** đưa về đúng màn hình trước đó (menu chính, lịch sử, cầu, thế chấp...), không đóng ra game.
+- Dialog con mở tiếp (ví dụ: chọn tiền → nhập số lượng) giữ một **ngăn xếp điều hướng**; bấm Quay lại sẽ lùi từng bước.
+- Đóng dialog con bằng phím Esc cũng quay về màn hình trước.
+- Thao tác quy đổi thành công xong sẽ đưa về GUI/dialog trước với số dư mới.
+- Thoát hẳn khỏi menu chính mới đóng ra game.
+
 ---
 
 ## 3. GUI Bedrock
