@@ -299,6 +299,8 @@ Chi tiết: [Bedrock Setup](https://github.com/foxstudio-201/BlizCraft/wiki/Bedr
 
 ## Wiki
 
+> GitHub Wiki cần trang đầu tiên được tạo thủ công trên web. Bản Markdown đầy đủ luôn có trong thư mục [`wiki/`](wiki/Home.md). Sau khi tạo trang wiki đầu tiên, workflow `Publish Wiki` sẽ đồng bộ toàn bộ nội dung.
+
 - [Home](https://github.com/foxstudio-201/BlizCraft/wiki)
 - [Installation](https://github.com/foxstudio-201/BlizCraft/wiki/Installation)
 - [Configuration](https://github.com/foxstudio-201/BlizCraft/wiki/Configuration)
