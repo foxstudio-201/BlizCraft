@@ -1,13 +1,26 @@
-# BlizPocket
+<p align="center">
+  <img src="assets/logo.png" alt="BlizPocket logo" width="240">
+</p>
 
-Plugin Tài Xỉu (Sic Bo) cho **Paper 26.2**, dùng tiền nội bộ **BlizCoin**, hỗ trợ nhiều nguồn tiền, GUI Java Dialog, form Bedrock native, hũ tích lũy và thế chấp vật phẩm.
+<h1 align="center">BlizPocket</h1>
 
-- Phiên bản: `1.0.0`
-- Paper: `26.2` (test với build `135`)
-- Java: `25`
-- License: GPL-3.0
+<p align="center">
+  Plugin Tài Xỉu (Sic Bo) cho <b>Paper 26.2</b>, dùng tiền nội bộ <b>BlizCoin</b>,<br>
+  hỗ trợ nhiều nguồn tiền, GUI Java Dialog, form Bedrock native, hũ tích lũy và thế chấp vật phẩm.
+</p>
 
-Tài liệu chi tiết nằm trong [Wiki](https://github.com/foxstudio-201/BlizCraft/wiki).
+<p align="center">
+  <b>Paper 26.2</b> &nbsp;·&nbsp;
+  <b>Java 25</b> &nbsp;·&nbsp;
+  <b>BlizCoin</b> &nbsp;·&nbsp;
+  <b>GPL-3.0</b>
+</p>
+
+<p align="center">
+  <a href="https://github.com/foxstudio-201/BlizCraft/wiki"><b>Wiki</b></a> &nbsp;·&nbsp;
+  <a href="https://github.com/foxstudio-201/BlizCraft/releases"><b>Releases</b></a> &nbsp;·&nbsp;
+  <a href="https://github.com/foxstudio-201/BlizCraft/issues"><b>Issues</b></a>
+</p>
 
 ---
 
