@@ -82,6 +82,11 @@ public final class Settings {
     public double houseRandomChancePercent;
     public double minimumWinProfitPercent;
     public boolean houseCoversShortfall;
+    public boolean taxEnabled;
+    public double winTaxPercent;
+    public double jackpotTaxPercent;
+    public boolean taxToJackpot;
+    public boolean taxNotify;
 
     public boolean jackpotEnabled;
     public long jackpotStart;
@@ -176,6 +181,11 @@ public final class Settings {
         houseRandomChancePercent = clampPercent(c.getDouble("payout.house-random-chance-percent", 0.0));
         minimumWinProfitPercent = Math.max(0, c.getDouble("payout.minimum-win-profit-percent", 100.0));
         houseCoversShortfall = c.getBoolean("payout.house-covers-shortfall", true);
+        taxEnabled = c.getBoolean("tax.enabled", true);
+        winTaxPercent = clampPercent(c.getDouble("tax.win-percent", 5.0));
+        jackpotTaxPercent = clampPercent(c.getDouble("tax.jackpot-percent", 5.0));
+        taxToJackpot = c.getBoolean("tax.to-jackpot", false);
+        taxNotify = c.getBoolean("tax.notify-player", true);
 
         jackpotEnabled = c.getBoolean("jackpot.enabled", true);
         jackpotStart = Math.max(0, c.getLong("jackpot.starting-amount", 0));

@@ -86,6 +86,9 @@ result:
   room-house: "<dark_red>Phiên <yellow>#{session}</yellow>: NHÀ CÁI THẮNG</dark_red> <gray>- toàn bộ tiền cược vào hũ.</gray>"
   subtitle: "<gray>Điểm <white>{total}</white> {dice}</gray>"
 
+tax:
+  paid: "<gray>Thuế thắng cược: <yellow>{amount} {symbol}</yellow></gray>"
+
 update:
   available: "<yellow><bold>Có bản cập nhật BlizPocket!</bold></yellow> <gray>Hiện tại: <white>{current}</white> → mới: <green>{latest}</green></gray>\n<gray>Tải tại: <aqua>{url}</aqua></gray>"
 

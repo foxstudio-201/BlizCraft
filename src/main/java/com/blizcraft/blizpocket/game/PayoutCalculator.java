@@ -15,7 +15,8 @@ import java.util.UUID;
 public final class PayoutCalculator {
     public record Outcome(GameResult result, boolean houseWin, int total,
                           long losingPool, long jackpotAdded, long houseCut, long prizePool, long houseTopUp,
-                          Map<UUID, Long> payouts, Map<UUID, Long> winningStakes, int winnersCount) {
+                          Map<UUID, Long> payouts, Map<UUID, Long> winningStakes, int winnersCount,
+                          Map<UUID, Long> taxes, long totalTax) {
     }
 
     private PayoutCalculator() {
@@ -32,7 +33,7 @@ public final class PayoutCalculator {
             long losingPool = 0;
             for (Bet bet : bets.values()) losingPool += bet.amount();
             return new Outcome(GameResult.HOUSE, true, total, losingPool, losingPool, 0, 0, 0,
-                    Map.of(), Map.of(), 0);
+                    Map.of(), Map.of(), 0, Map.of(), 0);
         }
 
         BetSide winnerSide = result == GameResult.TAI ? BetSide.TAI : BetSide.XIU;
@@ -48,7 +49,7 @@ public final class PayoutCalculator {
 
         if (winningStakes.isEmpty()) {
             return new Outcome(result, false, total, losingPool, losingPool, 0, 0, 0,
-                    Map.of(), Map.of(), 0);
+                    Map.of(), Map.of(), 0, Map.of(), 0);
         }
 
         long jackpotAdd = (long) Math.floor(losingPool * settings.jackpotContributionPercent / 100.0);
@@ -84,8 +85,24 @@ public final class PayoutCalculator {
             }
         }
 
+        Map<UUID, Long> taxes = new LinkedHashMap<>();
+        long totalTax = 0;
+        if (settings.taxEnabled && settings.winTaxPercent > 0) {
+            for (Map.Entry<UUID, Long> entry : winningStakes.entrySet()) {
+                long stake = entry.getValue();
+                long payout = payouts.getOrDefault(entry.getKey(), stake);
+                long profit = Math.max(0, payout - stake);
+                if (profit <= 0) continue;
+                long tax = (long) Math.floor(profit * settings.winTaxPercent / 100.0);
+                if (tax <= 0) continue;
+                payouts.put(entry.getKey(), payout - tax);
+                taxes.put(entry.getKey(), tax);
+                totalTax += tax;
+            }
+        }
+
         return new Outcome(result, false, total, losingPool, jackpotAdd, houseCut, prizePool, houseTopUp,
-                payouts, winningStakes, winningStakes.size());
+                payouts, winningStakes, winningStakes.size(), taxes, totalTax);
     }
 
     public static Map<UUID, Long> distribute(long total, Map<UUID, Long> weights) {

@@ -129,6 +129,17 @@ Ví dụ:
 
 Như vậy thắng **luôn có lời**, không còn báo hoà vốn khi bên thắng không có người thua đối diện.
 
+Thuế:
+
+- Thuế thắng trừ trên **tiền lời**, không trừ tiền gốc:
+  ```text
+  tax = floor(profit × win-percent / 100)
+  ```
+- Thuế hũ trừ trên phần hũ người thắng được chia.
+- Cấu hình tại `tax.win-percent`, `tax.jackpot-percent`.
+- Mặc định 5%; đặt 0 hoặc `tax.enabled: false` để tắt.
+- `tax.to-jackpot: true` đưa thuế vào hũ; `false` thì thuế biến mất.
+
 Nếu muốn cơ chế chia pool thuần (có thể hoà vốn):
 
 ```yaml

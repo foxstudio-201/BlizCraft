@@ -49,6 +49,7 @@
 - Thắng luôn được cộng lời tối thiểu (mặc định 100% tiền cược). Nếu tiền người thua không đủ, nhà cái bù phần thiếu.
 - Người đặt càng nhiều thì phần thắng càng lớn.
 - Bộ ba hoặc tỉ lệ random cấu hình → **nhà cái thắng**, không ai được trả.
+- Thuế thắng cược trên **tiền lời** và thuế **hũ** có thể cấu hình; khác với lãi nhà cái và phí quy đổi.
 - Hũ có thể **nổ random**, chỉ chia cho người thắng theo tỉ lệ cược; người thua không nhận.
 - Toàn bộ phép chia dùng phần dư chính xác, không làm mất tiền lẻ.
 
@@ -272,6 +273,13 @@ room:
 payout:
   minimum-win-profit-percent: 100.0
   house-covers-shortfall: true
+
+tax:
+  enabled: true
+  win-percent: 5.0
+  jackpot-percent: 5.0
+  to-jackpot: false
+  notify-player: true
 
 bossbar:
   compact-numbers: true

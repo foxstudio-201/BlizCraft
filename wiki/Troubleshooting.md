@@ -259,3 +259,23 @@ Kiểm tra:
 5. `/txa reload` hoặc restart nếu vừa sửa config.
 
 Khi tắt title, bossbar vẫn hoạt động bình thường.
+
+## 18. Thuế thắng cược
+
+Cấu hình:
+
+```yaml
+tax:
+  enabled: true
+  win-percent: 5.0
+  jackpot-percent: 5.0
+  to-jackpot: false
+  notify-player: true
+```
+
+- Thuế thắng tính trên tiền lời, không phải tổng tiền nhận.
+- Thuế hũ tính trên phần hũ được chia.
+- Thuế không áp dụng cho người thua.
+- `to-jackpot: true` đưa thuế trở lại hũ; khi đó hũ có thể không về 0 sau nổ.
+- `house-rake-percent` và `exchange.fee-percent` là khoản khác, không phải thuế này.
+- Sau khi sửa: `/txa reload`; nếu vừa thay jar cần restart.

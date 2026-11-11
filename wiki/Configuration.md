@@ -187,6 +187,25 @@ payout:
   - `true`: thắng luôn có lời; tiền bù được tạo ra (có thể gây lạm phát, cân nhắc tỉ lệ).
   - `false`: chỉ chia pool; không có người thua đối diện thì hoà vốn.
 
+## 7.1 tax (thuế)
+
+```yaml
+tax:
+  enabled: true
+  win-percent: 5.0
+  jackpot-percent: 5.0
+  to-jackpot: false
+  notify-player: true
+```
+
+- `win-percent`: thuế trên **lợi nhuận** khi thắng. Không trừ tiền gốc.
+- `jackpot-percent`: thuế trên phần hũ người thắng nhận được.
+- `to-jackpot`: `true` = tiền thuế cộng vào hũ, `false` = thuế biến mất.
+- `notify-player`: gửi thông báo riêng cho người bị trừ thuế.
+- Thuế **không** áp dụng cho người thua.
+- Thuế khác với `house-rake-percent` (lãi nhà cái trên pool người thua) và `currencies.exchange.fee-percent` (phí quy đổi).
+- Đặt `enabled: false` hoặc các `*-percent: 0` để tắt.
+
 Cách chia khi không phải nhà cái thắng:
 
 ```text

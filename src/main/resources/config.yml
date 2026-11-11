@@ -175,6 +175,25 @@ jackpot:
   # Người thua không nhận gì. Chia đến khi hũ = 0 (không để dư).
 
 # -------------------------------------------------------------------------------------
+# Thuế thắng cược (khác với house-rake và phí quy đổi)
+# -------------------------------------------------------------------------------------
+#  - Thuế thắng chỉ trừ trên TIỀN LỜI, không trừ tiền gốc.
+#  - Thuế hũ trừ trên phần hũ người thắng được chia khi nổ hũ.
+#  - Thuế KHÔNG áp dụng cho người thua.
+#  - Phí quy đổi tiền nằm riêng ở currencies.exchange.fee-percent.
+# -------------------------------------------------------------------------------------
+tax:
+  enabled: true
+  # % thuế trên lợi nhuận thắng cược (profit = payout - tiền_gốc).
+  win-percent: 5.0
+  # % thuế trên phần thưởng nổ hũ.
+  jackpot-percent: 5.0
+  # true = tiền thuế được cộng vào hũ; false = thuế biến mất khỏi nền kinh tế.
+  to-jackpot: false
+  # Thông báo riêng cho người bị trừ thuế.
+  notify-player: true
+
+# -------------------------------------------------------------------------------------
 # Bossbar (chỉ người có tài khoản + ở trong phòng mới thấy)
 # -------------------------------------------------------------------------------------
 bossbar:

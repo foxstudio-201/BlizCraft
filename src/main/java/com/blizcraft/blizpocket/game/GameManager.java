@@ -20,6 +20,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -212,21 +213,45 @@ public final class GameManager {
         long pot = data.jackpot() + outcome.jackpotAdded()
                 + (settings.rakeToJackpot ? outcome.houseCut() : 0);
         Map<UUID, Long> jackpotWins = Map.of();
+        Map<UUID, Long> jackpotTaxes = Map.of();
         long jackpotWon = 0;
+        long jackpotTaxTotal = 0;
         if (settings.jackpotEnabled
                 && outcome.winnersCount() > 0
                 && pot >= settings.jackpotMinExplodeAmount
                 && settings.jackpotExplodeChancePercent > 0
                 && random.nextDouble() * 100.0 < settings.jackpotExplodeChancePercent) {
-            jackpotWins = PayoutCalculator.distribute(pot, outcome.winningStakes());
-            jackpotWon = pot;
+            Map<UUID, Long> grossWins = PayoutCalculator.distribute(pot, outcome.winningStakes());
+            Map<UUID, Long> netWins = new LinkedHashMap<>();
+            if (settings.taxEnabled && settings.jackpotTaxPercent > 0) {
+                Map<UUID, Long> taxes = new LinkedHashMap<>();
+                for (Map.Entry<UUID, Long> entry : grossWins.entrySet()) {
+                    long tax = (long) Math.floor(entry.getValue() * settings.jackpotTaxPercent / 100.0);
+                    if (tax > 0) {
+                        taxes.put(entry.getKey(), tax);
+                        jackpotTaxTotal += tax;
+                    }
+                    netWins.put(entry.getKey(), entry.getValue() - tax);
+                }
+                jackpotTaxes = taxes;
+            } else {
+                netWins.putAll(grossWins);
+            }
+            jackpotWins = netWins;
+            for (long value : netWins.values()) jackpotWon += value;
             data.jackpot(0);
+            if (settings.taxToJackpot && jackpotTaxTotal > 0) data.addJackpot(jackpotTaxTotal);
         } else {
             data.jackpot(pot);
         }
+        if (settings.taxToJackpot && outcome.totalTax() > 0) data.addJackpot(outcome.totalTax());
         current.jackpotWon(jackpotWon);
         if (settings.logTransactions && outcome.houseTopUp() > 0) {
             data.logTransaction("HOUSE TOP-UP session=" + current.id() + " amount=" + outcome.houseTopUp());
+        }
+        if (settings.logTransactions && (outcome.totalTax() > 0 || jackpotTaxTotal > 0)) {
+            data.logTransaction("TAX session=" + current.id() + " win=" + outcome.totalTax()
+                    + " jackpot=" + jackpotTaxTotal);
         }
 
         for (Bet bet : current.bets().values()) {
@@ -264,11 +289,12 @@ public final class GameManager {
         data.addSession(record);
         data.saveAsync();
 
-        announceResult(current, outcome, jackpotWins, jackpotWon, now);
+        announceResult(current, outcome, jackpotWins, jackpotTaxes, jackpotWon, now);
     }
 
     private void announceResult(Session current, PayoutCalculator.Outcome outcome,
-                                Map<UUID, Long> jackpotWins, long jackpotWon, long now) {
+                                Map<UUID, Long> jackpotWins, Map<UUID, Long> jackpotTaxes,
+                                long jackpotWon, long now) {
         String result = messages.raw(outcome.result().messageKey());
         String dice = current.diceText(settings.diceSymbols.toArray(new String[0]));
         Map<String, String> base = ph(
@@ -334,6 +360,14 @@ public final class GameManager {
             }
             Component personalSub = messages.comp(key, personal);
             messages.send(player, key, personal);
+            long tax = outcome.taxes().getOrDefault(player.getUniqueId(), 0L)
+                    + jackpotTaxes.getOrDefault(player.getUniqueId(), 0L);
+            if (settings.taxEnabled && settings.taxNotify && tax > 0) {
+                messages.send(player, "tax.paid", ph(
+                        "amount", Numbers.format(tax),
+                        "symbol", settings.baseSymbol
+                ));
+            }
             if (jackpotWin > 0) {
                 messages.send(player, "jackpot.won", ph("amount", Numbers.format(jackpotWin), "symbol", settings.baseSymbol));
                 sendTitle(player, messages.comp("title.jackpot-main"), messages.comp("title.jackpot-sub",
