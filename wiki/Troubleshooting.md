@@ -246,3 +246,16 @@ payout:
 - Nếu đặt `0`/`false`, plugin quay về chia pool và có thể hoà vốn.
 
 Sau khi sửa: `/txa reload` hoặc restart. Nếu vừa thay jar, cần restart.
+
+
+## 17. Title không hiện giữa màn hình
+
+Kiểm tra:
+
+1. `/tx title` — nếu đang tắt, bật lại.
+2. GUI Tài khoản có nút Bật/Tắt title.
+3. `session.titles.enabled: true` trong config.
+4. Player phải có tài khoản + trong phòng.
+5. `/txa reload` hoặc restart nếu vừa sửa config.
+
+Khi tắt title, bossbar vẫn hoạt động bình thường.

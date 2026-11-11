@@ -20,13 +20,13 @@ payout:
 ## 2. Chu kỳ phiên
 
 ```text
-BETTING  → LOCKED → ROLLING → RESULT → WAITING → BETTING
+BETTING (N giây cuối tự khóa) → ROLLING → RESULT → WAITING → BETTING
 ```
 
 | Giai đoạn | Việc xảy ra |
 |---|---|
 | BETTING | Mở đặt cược, bossbar hiện Tài/Xỉu/Hũ |
-| LOCKED | Khóa cược, title đếm ngược 5→1, không nhận vé mới |
+| BETTING (cuối) | `lock-seconds` giây cuối tự khóa, title đếm ngược 10→1, không nhận vé mới |
 | ROLLING | Title hiển thị xúc xắc quay |
 | RESULT | Công bố kết quả, trả thưởng, hiện tổng kết |
 | WAITING | Đếm ngược trước phiên mới |
@@ -36,7 +36,7 @@ Thời gian mặc định:
 ```yaml
 session:
   betting-seconds: 45
-  lock-seconds: 5
+  lock-seconds: 10
   roll-seconds: 4
   result-seconds: 6
   next-round-delay-seconds: 5
@@ -217,3 +217,20 @@ Tài khoản lưu:
 - Lịch sử các phiên gần đây.
 
 Tiếp theo: [[GUI-Guide]]
+
+
+## 11. Bật/tắt title
+
+Mỗi player có thể tắt title giữa màn hình:
+
+```text
+/tx title
+/tx title on
+/tx title off
+```
+
+Hoặc vào **Tài khoản** → nút **Bật/Tắt title**.
+
+- Bật: title khóa cược, xúc xắc, kết quả, nổ hũ hiển thị như cũ.
+- Tắt: chỉ còn bossbar và thông báo chat; title bị bỏ qua.
+- Lựa chọn lưu theo tài khoản.

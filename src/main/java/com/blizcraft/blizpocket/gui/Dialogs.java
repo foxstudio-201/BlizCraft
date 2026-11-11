@@ -158,6 +158,15 @@ public final class Dialogs {
                 button(messages.comp("dialog.account.exchange"), custom((view, audience) -> {
                     if (audience instanceof Player p) gui.openExchange(p);
                 })),
+                button(messages.comp(account.titleEnabled()
+                                ? "dialog.account.toggle-title-off"
+                                : "dialog.account.toggle-title-on"),
+                        custom((view, audience) -> {
+                            if (audience instanceof Player p) {
+                                gui.game().toggleTitle(p);
+                                gui.openAccount(p);
+                            }
+                        })),
                 button(messages.comp("dialog.account.menu"), custom((view, audience) -> {
                     if (audience instanceof Player p) gui.openMainMenu(p);
                 }))

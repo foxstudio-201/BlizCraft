@@ -24,7 +24,7 @@ import java.util.Map;
 public final class TxCommand implements CommandExecutor, TabCompleter {
     private static final List<String> SUBCOMMANDS = List.of(
             "menu", "taikhoan", "dangky", "vaophong", "thoatphong", "cuoc",
-            "doicuoc", "nap", "rut", "thechap", "lichsu", "cau", "hu", "top", "help"
+            "doicuoc", "nap", "rut", "thechap", "lichsu", "cau", "hu", "title", "top", "help"
     );
 
     private final BlizPocketPlugin plugin;
@@ -154,11 +154,28 @@ public final class TxCommand implements CommandExecutor, TabCompleter {
             }
             case "thechap", "collateral", "camco", "pawn" -> collateral(player, args);
             case "hu", "jackpot" -> plugin.getGuis().openJackpot(player);
+            case "title", "titlebar" -> title(player, args);
             case "top", "bxh" -> sendTop(player);
             case "help", "trogiup" -> sendHelp(player);
             default -> plugin.getMessages().send(player, "general.unknown-command");
         }
         return true;
+    }
+
+    private void title(Player player, String[] args) {
+        if (!require(player, "bliztaixiu.title")) return;
+        if (args.length < 2) {
+            plugin.getGame().toggleTitle(player);
+            return;
+        }
+        String value = args[1].toLowerCase(Locale.ROOT);
+        if (value.equals("on") || value.equals("bat") || value.equals("true")) {
+            plugin.getGame().setTitleEnabled(player, true);
+        } else if (value.equals("off") || value.equals("tat") || value.equals("false")) {
+            plugin.getGame().setTitleEnabled(player, false);
+        } else {
+            plugin.getMessages().send(player, "general.unknown-command");
+        }
     }
 
     private void collateral(Player player, String[] args) {
@@ -340,6 +357,7 @@ public final class TxCommand implements CommandExecutor, TabCompleter {
                 case "cuoc", "bet", "dat" -> filter(List.of("tai", "xiu"), args[1]);
                 case "doicuoc", "exchange", "doi", "nap", "deposit", "rut", "withdraw" -> filter(plugin.getCurrencies().availableIds(), args[1]);
                 case "thechap", "collateral", "camco", "pawn" -> filter(List.of("dat", "tra", "list"), args[1]);
+                case "title", "titlebar" -> filter(List.of("on", "off"), args[1]);
                 case "lichsu", "history", "ls", "cau", "road" -> filter(List.of("1", "2", "3"), args[1]);
                 default -> List.of();
             };

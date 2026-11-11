@@ -32,6 +32,7 @@ Alias chính: `/tx`, `/btx`, `/bliztaixiu`, `/bp`, `/blizpocket`.
 | `/tx lichsu 2` | Trang 2 lịch sử |
 | `/tx cau` | Xem cầu Tài/Xỉu |
 | `/tx hu` | Xem hũ |
+| `/tx title [on\|off]` | Bật/tắt title giữa màn hình |
 | `/tx top` | Top 10 BlizCoin |
 | `/tx help` | Trợ giúp trong game |
 
@@ -84,6 +85,7 @@ Admin có thể dùng từ console, trừ các lệnh yêu cầu người chơi 
 | `bliztaixiu.account` | true | Tài khoản |
 | `bliztaixiu.exchange` | true | Quy đổi |
 | `bliztaixiu.collateral` | true | Thế chấp |
+| `bliztaixiu.title` | true | Bật/tắt title |
 | `bliztaixiu.admin` | op | Admin chung + `/txa` |
 | `bliztaixiu.admin.reload` | op | Reload |
 | `bliztaixiu.admin.economy` | op | Give/take/set/reset |

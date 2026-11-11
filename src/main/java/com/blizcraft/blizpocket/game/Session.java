@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public final class Session {
     public enum Phase {
-        BETTING, LOCKED, ROLLING, RESULT, WAITING, IDLE;
+        BETTING, ROLLING, RESULT, WAITING, IDLE;
 
         public String key() {
             return name().toLowerCase();
@@ -28,6 +28,7 @@ public final class Session {
     private boolean resolved;
     private long lastAnnouncedSecond = Long.MIN_VALUE;
     private long lastBossbarSecond = Long.MIN_VALUE;
+    private boolean lockAnnounced;
     private int winnersCount;
     private long jackpotAdded;
     private long jackpotWon;
@@ -55,6 +56,7 @@ public final class Session {
         this.phaseStartedAt = now;
         this.phaseEndsAt = now + Math.max(1, durationMillis);
         this.lastAnnouncedSecond = Long.MIN_VALUE;
+        this.lockAnnounced = false;
     }
 
     public long phaseStartedAt() {
@@ -169,6 +171,14 @@ public final class Session {
 
     public long lastBossbarSecond() {
         return lastBossbarSecond;
+    }
+
+    public boolean lockAnnounced() {
+        return lockAnnounced;
+    }
+
+    public void lockAnnounced(boolean lockAnnounced) {
+        this.lockAnnounced = lockAnnounced;
     }
 
     public void lastBossbarSecond(long second) {

@@ -83,7 +83,7 @@ room:
 # Vòng đời một phiên cược
 # -------------------------------------------------------------------------------------
 #  BETTING  : mở đặt cược (betting-seconds)
-#  LOCKED   : khoá cược + đếm ngược 5..1 bằng title (lock-seconds)
+#             N giây cuối (lock-seconds) tự động khoá cược + đếm ngược 10..1
 #  ROLLING  : xúc xắc quay trên title (roll-seconds)
 #  RESULT   : công bố kết quả + trả thưởng (result-seconds)
 #  WAITING  : đếm ngược trước phiên mới (next-round-delay-seconds)
@@ -91,12 +91,10 @@ room:
 # -------------------------------------------------------------------------------------
 session:
   betting-seconds: 45
-  lock-seconds: 5
+  lock-seconds: 10
   roll-seconds: 4
   result-seconds: 6
   next-round-delay-seconds: 5
-  # Số giây cuối dùng để hiện title đếm ngược (không cho đặt cược trong khoảng này vì đã LOCKED).
-  countdown-seconds: 5
   dice:
     # Số mặt xúc xắc. Chuẩn Tài Xỉu dùng 6.
     sides: 6

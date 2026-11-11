@@ -78,6 +78,7 @@ Quy đổi hai chiều:
 - Java: Paper **Dialog API 26.2**.
 - Bedrock: form native qua **Cumulus / Floodgate**.
 - Mọi thao tác chọn GUI/dialog đều có âm thanh click cấu hình được.
+- Mỗi player có thể bật/tắt title giữa màn hình; khi tắt vẫn còn bossbar.
 
 ### Thế chấp vật phẩm
 - Chỉ các vật phẩm nằm trong `collateral.allowed-items` mới được thế chấp.
@@ -189,6 +190,7 @@ Repo không chứa thư viện server, jar Paper hay dữ liệu chạy thử.
 | `/tx lichsu [trang]` | Lịch sử phiên |
 | `/tx cau [trang]` | Xem cầu |
 | `/tx hu` | Xem hũ |
+| `/tx title [on\|off]` | Bật/tắt title giữa màn hình; bossbar vẫn hiện |
 | `/tx top` | Top BlizCoin |
 | `/tx help` | Trợ giúp |
 
@@ -226,6 +228,7 @@ Alias: `/tx`, `/btx`, `/bliztaixiu`, `/bp`, `/blizpocket`.
 | `bliztaixiu.account` | true | Tạo/xem tài khoản |
 | `bliztaixiu.exchange` | true | Quy đổi tiền |
 | `bliztaixiu.collateral` | true | Thế chấp/chuộc item |
+| `bliztaixiu.title` | true | Bật/tắt title giữa màn hình |
 | `bliztaixiu.admin` | op | Quyền admin chung |
 | `bliztaixiu.admin.reload` | op | Reload |
 | `bliztaixiu.admin.economy` | op | Sửa số dư |
@@ -246,7 +249,7 @@ Các mục quan trọng trong `config.yml`:
 ```yaml
 session:
   betting-seconds: 45
-  lock-seconds: 5
+  lock-seconds: 10   # 10 giây cuối của betting sẽ khóa cược
   roll-seconds: 4
   result-seconds: 6
   next-round-delay-seconds: 5

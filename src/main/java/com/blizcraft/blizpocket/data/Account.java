@@ -22,6 +22,7 @@ public final class Account {
     private long joinedAt;
     private BetSide lastSide;
     private long lastAmount;
+    private boolean titleEnabled = true;
     private final Deque<PlayerSessionRecord> history = new ArrayDeque<>();
 
     public Account(UUID uuid, String name, long balance, long joinedAt) {
@@ -130,6 +131,14 @@ public final class Account {
         this.lastAmount = amount;
     }
 
+    public boolean titleEnabled() {
+        return titleEnabled;
+    }
+
+    public void titleEnabled(boolean titleEnabled) {
+        this.titleEnabled = titleEnabled;
+    }
+
     public Deque<PlayerSessionRecord> history() {
         return history;
     }
@@ -174,6 +183,7 @@ public final class Account {
         this.joinedAt = System.currentTimeMillis();
         this.lastSide = null;
         this.lastAmount = 0;
+        this.titleEnabled = true;
         this.history.clear();
     }
 }

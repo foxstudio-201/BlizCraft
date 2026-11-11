@@ -74,6 +74,7 @@ public final class DataStore {
                     String name = sec.getString("name", "Unknown");
                     long balance = sec.getLong("balance", 0);
                     Account account = new Account(uuid, name, balance, sec.getLong("joined-at", System.currentTimeMillis()));
+                    account.titleEnabled(sec.getBoolean("title-enabled", true));
                     account.loadStats(
                             sec.getLong("total-bet", 0),
                             sec.getLong("total-won", 0),
@@ -290,6 +291,7 @@ public final class DataStore {
             yaml.set(path + ".joined-at", account.joinedAt());
             yaml.set(path + ".last-side", account.lastSide() == null ? null : account.lastSide().name());
             yaml.set(path + ".last-amount", account.lastAmount());
+            yaml.set(path + ".title-enabled", account.titleEnabled());
             List<Map<String, Object>> history = new ArrayList<>();
             for (PlayerSessionRecord record : account.history()) {
                 Map<String, Object> entry = new LinkedHashMap<>();

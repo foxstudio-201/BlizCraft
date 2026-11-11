@@ -33,6 +33,7 @@ general:
     - "<yellow>/tx rut &lt;loai&gt; &lt;so_luong&gt;</yellow> <gray>- đổi BlizCoin ra ngoại tệ</gray>"
     - "<yellow>/tx lichsu [trang]</yellow> <gray>- lịch sử các phiên đã qua</gray>"
     - "<yellow>/tx cau [trang]</yellow> <gray>- xem cầu Tài/Xỉu</gray>"
+    - "<yellow>/tx title [on|off]</yellow> <gray>- bật/tắt title giữa màn hình (bossbar vẫn hiện)</gray>"
     - "<yellow>/tx hu</yellow> <gray>- xem hũ tích luỹ</gray>"
     - "<yellow>/tx top</yellow> <gray>- bảng xếp hạng BlizCoin</gray>"
     - "<yellow>/tx thechap</yellow> <gray>- thế chấp item lấy BlizCoin, chuộc lại trước hạn</gray>"
@@ -190,6 +191,8 @@ title:
   waiting-sub: "<gray>Chuẩn bị đặt cược</gray>"
   jackpot-main: "<gold><bold>NỔ HŨ!</bold></gold>"
   jackpot-sub: "<gold>+{amount} {symbol}</gold>"
+  enabled: "<green>Đã bật title hiển thị giữa màn hình.</green>"
+  disabled: "<yellow>Đã tắt title; chỉ còn bossbar.</yellow>"
 
 gui:
   bet:
@@ -363,6 +366,8 @@ dialog:
     body: "<gold>Số dư:</gold> <white>{balance} {symbol}</white>\n<gray>Tổng cược:</gray> <white>{total_bet}</white> <dark_gray>|</dark_gray> <gray>Tổng nhận:</gray> <white>{total_won}</white>\n<gray>Thắng/Thua/Hoà:</gray> <green>{wins}</green>/<red>{losses}</red>/<yellow>{draws}</yellow>\n<gray>Chuỗi thắng:</gray> <white>{streak}</white> <dark_gray>(cao nhất {best_streak})</dark_gray>\n<gray>Thắng lớn nhất:</gray> <gold>{biggest_win} {symbol}</gold>\n<gray>Ngày tạo:</gray> <white>{joined}</white>"
     history: "<green>Lịch sử</green>"
     exchange: "<aqua>Quy đổi tiền</aqua>"
+    toggle-title-off: "<yellow>Tắt title giữa màn hình</yellow>"
+    toggle-title-on: "<green>Bật title giữa màn hình</green>"
     menu: "<yellow>Menu</yellow>"
     close: "<red>Đóng</red>"
   exchange:

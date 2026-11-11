@@ -93,12 +93,22 @@ public final class GameManager {
         if (session == null) return;
 
         long seconds = session.secondsLeft(now);
+        boolean locked = session.phase() == Session.Phase.BETTING
+                && seconds <= settings.lockSeconds && seconds > 0;
+        if (locked && !session.lockAnnounced()) {
+            session.lockAnnounced(true);
+            session.lastAnnouncedSecond(Long.MIN_VALUE);
+            sendRoom("session.locked", ph("session", session.id()));
+            playRoom("lock");
+            updateBossbars(now);
+            if (guiManager != null) guiManager.tickOpen();
+        }
         if (seconds != session.lastBossbarSecond()) {
             session.lastBossbarSecond(seconds);
             updateBossbars(now);
             if (guiManager != null) guiManager.tickOpen();
         }
-        handleCountdown(seconds);
+        handleCountdown(seconds, locked);
         if (session.phase() == Session.Phase.ROLLING) animateRoll(now);
     }
 
@@ -106,12 +116,6 @@ public final class GameManager {
         if (session == null) return;
         switch (session.phase()) {
             case BETTING -> {
-                session.setPhase(Session.Phase.LOCKED, now, settings.lockSeconds * 1000L);
-                sendRoom("session.locked", ph("session", session.id()));
-                playRoom("lock");
-                updateBossbars(now);
-            }
-            case LOCKED -> {
                 pendingDice = Dice.roll(settings.diceSides, 3);
                 session.setPhase(Session.Phase.ROLLING, now, settings.rollSeconds * 1000L);
                 session.dice(Dice.roll(settings.diceSides, 3));
@@ -135,11 +139,11 @@ public final class GameManager {
         }
     }
 
-    private void handleCountdown(long seconds) {
+    private void handleCountdown(long seconds, boolean locked) {
         if (session == null || seconds <= 0) return;
         Session.Phase phase = session.phase();
-        if (phase == Session.Phase.LOCKED) {
-            if (seconds <= settings.countdownSeconds && session.lastAnnouncedSecond() != seconds) {
+        if (locked) {
+            if (seconds <= settings.lockSeconds && session.lastAnnouncedSecond() != seconds) {
                 session.lastAnnouncedSecond(seconds);
                 Component main = messages.comp("title.lock-main", ph("time", seconds));
                 Component sub = messages.comp("title.lock-sub");
@@ -150,7 +154,7 @@ public final class GameManager {
             }
         } else if (phase == Session.Phase.WAITING) {
             long safeSeconds = Math.min(seconds, settings.nextRoundDelaySeconds);
-            if (safeSeconds <= settings.countdownSeconds && session.lastAnnouncedSecond() != safeSeconds) {
+            if (safeSeconds <= settings.lockSeconds && session.lastAnnouncedSecond() != safeSeconds) {
                 session.lastAnnouncedSecond(safeSeconds);
                 Component main = messages.comp("title.waiting-main", ph("time", safeSeconds));
                 Component sub = messages.comp("title.waiting-sub");
@@ -347,7 +351,8 @@ public final class GameManager {
             messages.send(player, "general.no-permission");
             return false;
         }
-        if (session == null || session.phase() != Session.Phase.BETTING) {
+        if (session == null || session.phase() != Session.Phase.BETTING
+                || session.secondsLeft(System.currentTimeMillis()) <= settings.lockSeconds) {
             messages.send(player, "bet.locked");
             play(player, "error");
             return false;
@@ -603,7 +608,7 @@ public final class GameManager {
     public boolean startNow() {
         if (session != null) {
             Session.Phase phase = session.phase();
-            if (phase == Session.Phase.BETTING || phase == Session.Phase.LOCKED || phase == Session.Phase.ROLLING) {
+            if (phase == Session.Phase.BETTING || phase == Session.Phase.ROLLING) {
                 return false;
             }
         }
@@ -644,9 +649,10 @@ public final class GameManager {
         }
         String dice = session.diceText(settings.diceSymbols.toArray(new String[0]));
         String result = session.result() == null ? "" : messages.raw(session.result().messageKey());
-        String key = switch (session.phase()) {
+        long seconds = session.secondsLeft(now);
+        boolean locked = session.phase() == Session.Phase.BETTING && seconds <= settings.lockSeconds && seconds > 0;
+        String key = locked ? "bossbar.locked" : switch (session.phase()) {
             case BETTING -> "bossbar.betting";
-            case LOCKED -> "bossbar.locked";
             case ROLLING -> "bossbar.rolling";
             case RESULT -> "bossbar.result";
             case WAITING -> "bossbar.waiting";
@@ -654,7 +660,7 @@ public final class GameManager {
         };
         Map<String, String> placeholders = ph(
                 "session", session.id(),
-                "time", session.secondsLeft(now),
+                "time", seconds,
                 "jackpot", settings.bossbarCompactNumbers ? Numbers.compact(data.jackpot()) : Numbers.format(data.jackpot()),
                 "tai", settings.bossbarCompactNumbers ? Numbers.compact(session.sideTotal(BetSide.TAI)) : Numbers.format(session.sideTotal(BetSide.TAI)),
                 "xiu", settings.bossbarCompactNumbers ? Numbers.compact(session.sideTotal(BetSide.XIU)) : Numbers.format(session.sideTotal(BetSide.XIU)),
@@ -664,7 +670,7 @@ public final class GameManager {
                 "symbol", settings.baseSymbol
         );
         bossbar.name(messages.comp(key, placeholders));
-        bossbar.color(color(session.phase().key()));
+        bossbar.color(color(locked ? "locked" : session.phase().key()));
         bossbar.overlay(overlay());
         float progress = session.phase() == Session.Phase.RESULT ? 1f : session.progress(now);
         lastProgress = progress;
@@ -704,6 +710,8 @@ public final class GameManager {
 
     private void sendTitle(Player player, Component main, Component sub, int stayMs) {
         if (!settings.titlesEnabled) return;
+        Account account = data.get(player.getUniqueId());
+        if (account == null || !account.titleEnabled()) return;
         Title title = Title.title(main, sub, Title.Times.times(
                 Duration.ofMillis(settings.titleFadeInMs),
                 Duration.ofMillis(Math.max(100, stayMs)),
@@ -718,6 +726,25 @@ public final class GameManager {
 
     private void playRoom(String sound) {
         for (Player player : eligiblePlayers()) play(player, sound);
+    }
+
+    public boolean setTitleEnabled(Player player, boolean enabled) {
+        Account account = data.get(player.getUniqueId());
+        if (account == null) {
+            messages.send(player, "account.required");
+            return false;
+        }
+        account.titleEnabled(enabled);
+        data.saveAsync();
+        messages.send(player, enabled ? "title.enabled" : "title.disabled");
+        play(player, "click");
+        if (!enabled) player.clearTitle();
+        return true;
+    }
+
+    public boolean toggleTitle(Player player) {
+        Account account = data.get(player.getUniqueId());
+        return account != null && setTitleEnabled(player, !account.titleEnabled());
     }
 
     public void play(Player player, String sound) {

@@ -41,6 +41,9 @@ permissions:
   bliztaixiu.collateral:
     description: Cho phep the chap vat pham lay BlizCoin.
     default: true
+  bliztaixiu.title:
+    description: Cho phep bat/tat title giua man hinh.
+    default: true
   bliztaixiu.admin:
     description: Quyen quan tri tong quat (/txa).
     default: op

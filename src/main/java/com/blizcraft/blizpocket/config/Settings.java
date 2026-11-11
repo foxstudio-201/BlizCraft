@@ -57,7 +57,6 @@ public final class Settings {
     public int rollSeconds;
     public int resultSeconds;
     public int nextRoundDelaySeconds;
-    public int countdownSeconds;
     public boolean forfeitBetOnLeave;
     public int diceSides;
     public int rollIntervalTicks;
@@ -130,11 +129,10 @@ public final class Settings {
         removeOnQuit = c.getBoolean("room.remove-on-quit", true);
 
         bettingSeconds = Math.max(10, c.getInt("session.betting-seconds", 45));
-        lockSeconds = Math.max(1, c.getInt("session.lock-seconds", 5));
+        lockSeconds = Math.max(1, Math.min(bettingSeconds - 1, c.getInt("session.lock-seconds", 10)));
         rollSeconds = Math.max(1, c.getInt("session.roll-seconds", 4));
         resultSeconds = Math.max(1, c.getInt("session.result-seconds", 6));
         nextRoundDelaySeconds = Math.max(1, c.getInt("session.next-round-delay-seconds", 5));
-        countdownSeconds = Math.max(1, Math.min(lockSeconds, c.getInt("session.countdown-seconds", 5)));
         forfeitBetOnLeave = c.getBoolean("room.forfeit-bet-on-leave", true);
 
         diceSides = Math.max(2, Math.min(12, c.getInt("session.dice.sides", 6)));

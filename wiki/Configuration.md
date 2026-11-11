@@ -114,11 +114,10 @@ Ví dụ thông báo:
 ```yaml
 session:
   betting-seconds: 45
-  lock-seconds: 5
+  lock-seconds: 10
   roll-seconds: 4
   result-seconds: 6
   next-round-delay-seconds: 5
-  countdown-seconds: 5
   dice:
     sides: 6
     symbols: ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"]
@@ -133,14 +132,15 @@ session:
 Chu kỳ:
 
 1. `BETTING`: mở cược.
-2. `LOCKED`: khóa cược, title đếm ngược.
-3. `ROLLING`: quay xúc xắc.
-4. `RESULT`: công bố + trả thưởng.
-5. `WAITING`: chờ phiên mới.
+   - `lock-seconds` giây cuối của BETTING tự động khóa cược; **không cộng thêm thời gian**.
+   - Ví dụ 45/10: cược mở 35 giây, 10 giây cuối khóa và đếm ngược 10→1.
+2. `ROLLING`: quay xúc xắc.
+3. `RESULT`: công bố + trả thưởng.
+4. `WAITING`: chờ phiên mới.
 
 Lưu ý:
 - Không còn tùy chọn bỏ qua phiên rỗng. Không có ai cược vẫn quay và ghi lịch sử.
-- `countdown-seconds` là số giây hiện title khóa; mặc định 5.
+- `lock-seconds` là số giây cuối bị khóa, mặc định 10 và phải nhỏ hơn `betting-seconds`.
 - `roll-interval-ticks`: tần suất đổi mặt xúc xắc.
 - `symbols`: biểu tượng xúc xắc; có thể thay bằng ký tự khác.
 
@@ -365,7 +365,7 @@ rolling: "<light_purple>PHIÊN #{session}</light_purple>"
 ```yaml
 session:
   betting-seconds: 10
-  lock-seconds: 5
+  lock-seconds: 3
   roll-seconds: 2
   result-seconds: 3
   next-round-delay-seconds: 3

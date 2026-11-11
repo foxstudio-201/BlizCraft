@@ -181,13 +181,20 @@ public final class FloodgateBedrockGui implements BedrockGui {
                 .content(legacy("dialog.account.body", ph))
                 .button(legacy("dialog.account.history", ph))
                 .button(legacy("dialog.account.exchange", ph))
+                .button(legacy(account.titleEnabled()
+                        ? "dialog.account.toggle-title-off"
+                        : "dialog.account.toggle-title-on", ph))
                 .button(legacy("dialog.account.menu", ph))
                 .validResultHandler((SimpleFormResponse response) -> {
                     click(player);
                     switch (response.clickedButtonId()) {
                         case 0 -> gui.openHistory(player, 0);
                         case 1 -> openExchange(player);
-                        case 2 -> openMainMenu(player);
+                        case 2 -> {
+                            gui.game().toggleTitle(player);
+                            openAccount(player);
+                        }
+                        case 3 -> openMainMenu(player);
                         default -> {
                         }
                     }
