@@ -221,6 +221,9 @@ public final class GameManager {
             data.jackpot(pot);
         }
         current.jackpotWon(jackpotWon);
+        if (settings.logTransactions && outcome.houseTopUp() > 0) {
+            data.logTransaction("HOUSE TOP-UP session=" + current.id() + " amount=" + outcome.houseTopUp());
+        }
 
         for (Bet bet : current.bets().values()) {
             Account account = data.get(bet.playerId());

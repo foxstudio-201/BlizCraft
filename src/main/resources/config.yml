@@ -146,6 +146,12 @@ payout:
   house-win-on-triple: true
   # Tỉ lệ % ngẫu nhiên nhà cái thắng bất kể xúc xắc. 0 = tắt. Ví dụ 1.0 = 1%.
   house-random-chance-percent: 0.0
+  # Khi thắng, người chơi luôn được cộng thêm ít nhất % này của tiền cược.
+  # 100 = nhận gốc + 100% lời (tổng 2x). 0 = chỉ chia theo tiền người thua.
+  minimum-win-profit-percent: 100.0
+  # Nếu tiền người thua không đủ mức lời tối thiểu, nhà cái bù phần thiếu.
+  # false = quay lại cơ chế chia pool cũ (có thể hoà vốn khi không có người thua).
+  house-covers-shortfall: true
 
 jackpot:
   # Bật/tắt hũ tích luỹ.

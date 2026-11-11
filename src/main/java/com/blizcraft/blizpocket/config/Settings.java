@@ -77,6 +77,8 @@ public final class Settings {
     public boolean rakeToJackpot;
     public boolean houseWinOnTriple;
     public double houseRandomChancePercent;
+    public double minimumWinProfitPercent;
+    public boolean houseCoversShortfall;
 
     public boolean jackpotEnabled;
     public long jackpotStart;
@@ -166,6 +168,8 @@ public final class Settings {
         rakeToJackpot = c.getBoolean("payout.rake-to-jackpot", false);
         houseWinOnTriple = c.getBoolean("payout.house-win-on-triple", true);
         houseRandomChancePercent = clampPercent(c.getDouble("payout.house-random-chance-percent", 0.0));
+        minimumWinProfitPercent = Math.max(0, c.getDouble("payout.minimum-win-profit-percent", 100.0));
+        houseCoversShortfall = c.getBoolean("payout.house-covers-shortfall", true);
 
         jackpotEnabled = c.getBoolean("jackpot.enabled", true);
         jackpotStart = Math.max(0, c.getLong("jackpot.starting-amount", 0));

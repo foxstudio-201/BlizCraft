@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public final class PayoutCalculator {
     public record Outcome(GameResult result, boolean houseWin, int total,
-                          long losingPool, long jackpotAdded, long houseCut, long prizePool,
+                          long losingPool, long jackpotAdded, long houseCut, long prizePool, long houseTopUp,
                           Map<UUID, Long> payouts, Map<UUID, Long> winningStakes, int winnersCount) {
     }
 
@@ -31,7 +31,7 @@ public final class PayoutCalculator {
         if (house) {
             long losingPool = 0;
             for (Bet bet : bets.values()) losingPool += bet.amount();
-            return new Outcome(GameResult.HOUSE, true, total, losingPool, losingPool, 0, 0,
+            return new Outcome(GameResult.HOUSE, true, total, losingPool, losingPool, 0, 0, 0,
                     Map.of(), Map.of(), 0);
         }
 
@@ -47,7 +47,7 @@ public final class PayoutCalculator {
         }
 
         if (winningStakes.isEmpty()) {
-            return new Outcome(result, false, total, losingPool, losingPool, 0, 0,
+            return new Outcome(result, false, total, losingPool, losingPool, 0, 0, 0,
                     Map.of(), Map.of(), 0);
         }
 
@@ -71,7 +71,20 @@ public final class PayoutCalculator {
             payouts.put(entry.getKey(), entry.getValue() + shares.getOrDefault(entry.getKey(), 0L));
         }
 
-        return new Outcome(result, false, total, losingPool, jackpotAdd, houseCut, prizePool,
+        long houseTopUp = 0;
+        if (settings.houseCoversShortfall && settings.minimumWinProfitPercent > 0) {
+            for (Map.Entry<UUID, Long> entry : winningStakes.entrySet()) {
+                long stake = entry.getValue();
+                long minimumPayout = stake + (long) Math.ceil(stake * settings.minimumWinProfitPercent / 100.0);
+                long current = payouts.getOrDefault(entry.getKey(), stake);
+                if (current < minimumPayout) {
+                    houseTopUp += minimumPayout - current;
+                    payouts.put(entry.getKey(), minimumPayout);
+                }
+            }
+        }
+
+        return new Outcome(result, false, total, losingPool, jackpotAdd, houseCut, prizePool, houseTopUp,
                 payouts, winningStakes, winningStakes.size());
     }
 

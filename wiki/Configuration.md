@@ -160,7 +160,16 @@ payout:
   rake-to-jackpot: false
   house-win-on-triple: true
   house-random-chance-percent: 0.0
+  minimum-win-profit-percent: 100.0
+  house-covers-shortfall: true
 ```
+
+- `minimum-win-profit-percent`: lợi nhuận tối thiểu khi thắng.
+  - `100` = gốc + 100% lời (2x).
+  - `0` = chỉ chia theo pool, có thể hoà vốn.
+- `house-covers-shortfall`: nhà cái bù nếu tiền người thua không đủ mức lời tối thiểu.
+  - `true`: thắng luôn có lời; tiền bù được tạo ra (có thể gây lạm phát, cân nhắc tỉ lệ).
+  - `false`: chỉ chia pool; không có người thua đối diện thì hoà vốn.
 
 Cách chia khi không phải nhà cái thắng:
 

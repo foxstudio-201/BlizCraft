@@ -2,9 +2,6 @@ name: Publish Wiki
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - "wiki/**"
 
 permissions:
   contents: write

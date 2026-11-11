@@ -227,3 +227,22 @@ Xem [[Bedrock-Setup]]. Kiểm tra nhanh:
 - Log Geyser/Floodgate nếu lỗi Bedrock.
 
 Che token/mật khẩu trước khi gửi công khai.
+
+
+## 16. Thắng nhưng báo hoà vốn / không được cộng thêm
+
+Đây là cơ chế chia pool cũ khi bên thắng không có người thua đối diện.
+
+Kiểm tra:
+
+```yaml
+payout:
+  minimum-win-profit-percent: 100.0
+  house-covers-shortfall: true
+```
+
+- `minimum-win-profit-percent: 100` = thắng nhận gốc + 100% lời.
+- `house-covers-shortfall: true` = nhà cái bù nếu pool người thua không đủ.
+- Nếu đặt `0`/`false`, plugin quay về chia pool và có thể hoà vốn.
+
+Sau khi sửa: `/txa reload` hoặc restart. Nếu vừa thay jar, cần restart.

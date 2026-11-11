@@ -104,8 +104,15 @@ prizePool  = losingPool - jackpotAdd - houseCut
 Mỗi người thắng nhận:
 
 ```text
-payout = tiền_gốc + prizePool × (tiền_đặt / tổng_tiền_đặt_của_người_thắng)
+baseProfit = prizePool × (tiền_đặt / tổng_tiền_đặt_của_người_thắng)
+minimumPayout = tiền_gốc + ceil(tiền_gốc × minimum-win-profit-percent / 100)
+payout = max(tiền_gốc + baseProfit, minimumPayout)   # nếu house-covers-shortfall=true
 ```
+
+Mặc định `minimum-win-profit-percent: 100.0`:
+- Thắng luôn nhận **gốc + 100% lời** (tổng 2x tiền cược).
+- Nếu tiền người thua chia ra ít hơn mức này, **nhà cái bù phần thiếu**.
+- Nếu tiền người thua chia ra nhiều hơn, người thắng nhận theo tỉ lệ cao hơn.
 
 Ví dụ:
 
@@ -115,17 +122,24 @@ Ví dụ:
 - `losingPool = 2.000`.
 - Hũ 25% = 500, lãi nhà cái 5% = 100.
 - `prizePool = 1.400`.
-- A nhận 1.100 + 375 = 1.475.
-- B nhận 3.000 + 1.025 = 4.025.
-- C mất 2.000.
+- Chia pool: A 375, B 1.025.
+- Mức tối thiểu 100%: A phải nhận 2.200, B phải nhận 6.000.
+- Nhà cái bù: A +725, B +1.975 (tổng 2.700).
+- C mất 2.000; hũ +500.
 
-=> Đặt càng nhiều, phần lời càng lớn theo tỉ lệ.
+Như vậy thắng **luôn có lời**, không còn báo hoà vốn khi bên thắng không có người thua đối diện.
 
-Nếu tất cả người chơi đặt cùng một bên thắng:
+Nếu muốn cơ chế chia pool thuần (có thể hoà vốn):
 
-- Không có losingPool.
-- Người thắng chỉ nhận lại tiền gốc.
-- Thống kê ghi nhận hòa.
+```yaml
+payout:
+  minimum-win-profit-percent: 0.0
+  house-covers-shortfall: false
+```
+
+Khi đó:
+- Không có người thua → chỉ nhận lại gốc.
+- Thống kê có thể ghi hòa.
 
 ---
 

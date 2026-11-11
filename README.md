@@ -33,6 +33,7 @@ Tài liệu chi tiết nằm trong [Wiki](https://github.com/foxstudio-201/BlizC
   - một phần vào **hũ tích lũy**,
   - một phần **lãi nhà cái** (có thể tắt),
   - phần còn lại chia cho người thắng theo tỉ lệ tiền đặt.
+- Thắng luôn được cộng lời tối thiểu (mặc định 100% tiền cược). Nếu tiền người thua không đủ, nhà cái bù phần thiếu.
 - Người đặt càng nhiều thì phần thắng càng lớn.
 - Bộ ba hoặc tỉ lệ random cấu hình → **nhà cái thắng**, không ai được trả.
 - Hũ có thể **nổ random**, chỉ chia cho người thắng theo tỉ lệ cược; người thua không nhận.
@@ -251,6 +252,10 @@ room:
   announce-join-leave: true
   announce-scope: room
   forfeit-bet-on-leave: true
+
+payout:
+  minimum-win-profit-percent: 100.0
+  house-covers-shortfall: true
 
 bossbar:
   compact-numbers: true
