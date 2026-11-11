@@ -744,7 +744,11 @@ public final class GameManager {
 
     public boolean toggleTitle(Player player) {
         Account account = data.get(player.getUniqueId());
-        return account != null && setTitleEnabled(player, !account.titleEnabled());
+        if (account == null) {
+            messages.send(player, "account.required");
+            return false;
+        }
+        return setTitleEnabled(player, !account.titleEnabled());
     }
 
     public void play(Player player, String sound) {
