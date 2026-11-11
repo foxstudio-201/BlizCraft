@@ -51,7 +51,23 @@ Dữ liệu còn được lưu ngay sau các giao dịch quan trọng, khi `/txa
 
 ---
 
-## 3. account
+## 3. update-checker
+
+```yaml
+update-checker:
+  enabled: true
+  github-repo: "foxstudio-201/BlizCraft"
+  notify-admins: true
+  timeout-seconds: 10
+```
+
+- Chỉ kiểm tra **một lần khi server khởi động xong** (`ServerLoadEvent` STARTUP).
+- Không kiểm tra định kỳ, không chạy khi `/txa reload`.
+- Restart server → kiểm tra lại một lần.
+- Console luôn nhận cảnh báo; admin online nhận chat nếu bật.
+- Nếu API lỗi, không thử lại cho tới lần restart sau.
+
+## 4. account
 
 ```yaml
 account:

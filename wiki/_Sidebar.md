@@ -10,6 +10,7 @@
 - [[Collateral]]
 - [[Data-and-Backups]]
 - [[Bedrock-Setup]]
+- [[Release-and-Updates]]
 - [[Troubleshooting]]
 
 ---

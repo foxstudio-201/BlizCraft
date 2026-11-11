@@ -37,6 +37,10 @@ public final class Settings {
     public int maxSessions;
     public boolean logTransactions;
     public boolean debug;
+    public boolean updateCheckerEnabled;
+    public String updateGitHubRepo;
+    public boolean updateNotifyAdmins;
+    public int updateTimeoutSeconds;
 
     public long startingBalance;
     public boolean startingBalanceEnabled;
@@ -109,6 +113,10 @@ public final class Settings {
         maxSessions = Math.max(20, c.getInt("storage.max-sessions", 300));
         logTransactions = c.getBoolean("storage.log-transactions", true);
         debug = c.getBoolean("storage.debug", false);
+        updateCheckerEnabled = c.getBoolean("update-checker.enabled", true);
+        updateGitHubRepo = c.getString("update-checker.github-repo", "foxstudio-201/BlizCraft");
+        updateNotifyAdmins = c.getBoolean("update-checker.notify-admins", true);
+        updateTimeoutSeconds = Math.max(3, c.getInt("update-checker.timeout-seconds", 10));
 
         startingBalance = Math.max(0, c.getLong("account.starting-balance", 1000));
         startingBalanceEnabled = c.getBoolean("account.starting-balance-enabled", true);

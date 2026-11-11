@@ -116,7 +116,21 @@ op <tên>
 
 Không xóa các file `.yml` dữ liệu khi nâng cấp, trừ khi muốn reset.
 
-## 7. Gỡ plugin
+## 7. Update checker
+
+Plugin kiểm tra GitHub Release một lần sau khi server khởi động xong. Cấu hình tại:
+
+```yaml
+update-checker:
+  enabled: true
+  github-repo: "foxstudio-201/BlizCraft"
+  notify-admins: true
+  timeout-seconds: 10
+```
+
+Xem [[Release-and-Updates]].
+
+## 8. Gỡ plugin
 
 1. Dừng server.
 2. `/txa save` trước khi dừng nếu có thể.

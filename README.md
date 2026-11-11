@@ -302,6 +302,27 @@ Chi tiết: [Bedrock Setup](https://github.com/foxstudio-201/BlizCraft/wiki/Bedr
 
 ---
 
+## Release & Update
+
+- Workflow `.github/workflows/release.yml` build Maven và tạo GitHub Release theo tag/version.
+- Phát hành bằng tag:
+  ```bash
+  git tag v1.0.1
+  git push origin v1.0.1
+  ```
+- Hoặc chạy tay: **Actions → Release → Run workflow**.
+- Plugin kiểm tra bản mới **một lần khi server khởi động xong** bằng `ServerLoadEvent` (`STARTUP`), không polling định kỳ. Restart server sẽ kiểm tra lại.
+- Cấu hình:
+  ```yaml
+  update-checker:
+    enabled: true
+    github-repo: "foxstudio-201/BlizCraft"
+    notify-admins: true
+    timeout-seconds: 10
+  ```
+
+Chi tiết: [Release & Updates](https://github.com/foxstudio-201/BlizCraft/wiki/Release-and-Updates).
+
 ## Wiki
 
 > GitHub Wiki cần trang đầu tiên được tạo thủ công trên web. Bản Markdown đầy đủ luôn có trong thư mục [`wiki/`](wiki/Home.md). Sau khi tạo trang wiki đầu tiên, workflow `Publish Wiki` sẽ đồng bộ toàn bộ nội dung.
@@ -316,6 +337,7 @@ Chi tiết: [Bedrock Setup](https://github.com/foxstudio-201/BlizCraft/wiki/Bedr
 - [Collateral](https://github.com/foxstudio-201/BlizCraft/wiki/Collateral)
 - [Data & Backups](https://github.com/foxstudio-201/BlizCraft/wiki/Data-and-Backups)
 - [Bedrock Setup](https://github.com/foxstudio-201/BlizCraft/wiki/Bedrock-Setup)
+- [Release & Updates](https://github.com/foxstudio-201/BlizCraft/wiki/Release-and-Updates)
 - [Troubleshooting](https://github.com/foxstudio-201/BlizCraft/wiki/Troubleshooting)
 
 ---

@@ -23,6 +23,7 @@ Chào mừng đến wiki của **BlizPocket** — plugin Tài Xỉu (Sic Bo) cho
 | [[Collateral]] | Thế chấp item, enchant, lãi, hạn, mất tài sản |
 | [[Data-and-Backups]] | File dữ liệu, lưu/backup/restore |
 | [[Bedrock-Setup]] | Geyser, Floodgate, ViaVersion, cổng 19132 |
+| [[Release-and-Updates]] | Release workflow, tag version, update checker |
 | [[Troubleshooting]] | Lỗi thường gặp và cách xử lý |
 
 ## Thông tin phiên bản

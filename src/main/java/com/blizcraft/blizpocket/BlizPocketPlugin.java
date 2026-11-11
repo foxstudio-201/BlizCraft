@@ -11,6 +11,7 @@ import com.blizcraft.blizpocket.game.GameManager;
 import com.blizcraft.blizpocket.gui.GuiManager;
 import com.blizcraft.blizpocket.listener.GuiListener;
 import com.blizcraft.blizpocket.listener.PlayerListener;
+import com.blizcraft.blizpocket.update.UpdateChecker;
 import com.blizcraft.blizpocket.util.Numbers;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -53,7 +54,7 @@ public final class BlizPocketPlugin extends JavaPlugin {
         }
         getServer().getPluginManager().registerEvents(new GuiListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
-
+        new UpdateChecker(this, settings, messages).register();
         game.start();
         getServer().getScheduler().runTaskLater(this, () -> {
             currencies.refresh();
