@@ -1,0 +1,326 @@
+# =====================================================================================
+#  BlizPocket - Cấu hình chính
+# =====================================================================================
+#  Tất cả tin nhắn/GUI chữ nghĩa nằm trong messages.yml (hỗ trợ MiniMessage).
+#  File này chỉ chứa CƠ CHẾ, THỜI GIAN, TIỀN TỆ, TỈ GIÁ, ÂM THANH, BOSSBAR...
+#
+#  LƯU Ý QUAN TRỌNG:
+#   - Tiền đặt cược luôn là BlizCoin (tiền nội bộ của plugin).
+#   - Người chơi nạp các loại tiền bên ngoài (Vault/EssentialsX, PlayerPoints,
+#     cấp kinh nghiệm, vật phẩm, custom...) và quy đổi thành BlizCoin để chơi.
+#   - Chỉ người ĐÃ CÓ TÀI KHOẢN + ĐÃ VÀO PHÒNG mới thấy bossbar/thông báo.
+#   - Plugin KHÔNG broadcast toàn server. Mọi thông báo chỉ gửi trong phòng.
+#   - Sửa xong dùng: /txa reload
+# =====================================================================================
+
+config-version: 1
+
+# -------------------------------------------------------------------------------------
+# Ngôn ngữ / định dạng hiển thị
+# -------------------------------------------------------------------------------------
+language:
+  # Mẫu số. Ví dụ "#,##0" => 1,234,567 ; "#.###" => 1.234.567
+  number-format: "#,##0"
+  # Định dạng ngày giờ trong lịch sử (theo timezone bên dưới)
+  date-format: "dd/MM/yyyy HH:mm:ss"
+  # Múi giờ dùng để hiển thị lịch sử. Để trống để dùng múi giờ máy chủ.
+  timezone: "Asia/Ho_Chi_Minh"
+
+# -------------------------------------------------------------------------------------
+# Lưu trữ dữ liệu
+# -------------------------------------------------------------------------------------
+storage:
+  # Tự động lưu tài khoản/phiên/hũ mỗi bao nhiêu giây (tính cả khi server đang chạy).
+  # Dữ liệu còn được lưu ngay khi kết thúc phiên, khi tắt server và khi admin sửa tiền.
+  save-interval-seconds: 300
+  # Số phiên gần nhất được lưu để xem lịch sử/cầu. Phiên cũ hơn sẽ bị xoá khỏi file.
+  max-sessions: 300
+  # Ghi log giao dịch (đặt cược, trả thưởng, nổ hũ, đổi tiền) ra file transactions.log
+  log-transactions: true
+  # Bật log debug chi tiết ra console (chỉ dùng khi cần tìm lỗi).
+  debug: false
+
+# -------------------------------------------------------------------------------------
+# Tài khoản người chơi
+# -------------------------------------------------------------------------------------
+account:
+  # Bật/tắt cấp tiền tân thủ khi tạo tài khoản.
+  # false = tạo tài khoản với số dư 0, bỏ qua starting-balance.
+  starting-balance-enabled: true
+  # Số BlizCoin tặng khi tạo tài khoản lần đầu (nếu bật ở trên).
+  starting-balance: 1000
+  # Số trận gần nhất lưu trong lịch sử cá nhân của mỗi người chơi.
+  max-history: 100
+
+# -------------------------------------------------------------------------------------
+# Phòng cược
+# -------------------------------------------------------------------------------------
+room:
+  # true = bắt buộc vào phòng mới được đặt cược và nhận bossbar.
+  require: true
+  # Số người tối đa trong phòng. 0 = không giới hạn.
+  max-players: 0
+  # Thông báo khi có người vào/ra phòng.
+  announce-join-leave: true
+  # Phạm vi thông báo: room = chỉ người trong phòng, server = toàn server.
+  announce-scope: room
+  # Khi người chơi thoát server thì tự rời phòng.
+  remove-on-quit: true
+  # true = rời phòng hoặc thoát server khi đang có vé cược chưa có kết quả
+  # sẽ MẤT toàn bộ tiền cược của phiên đó (tiền vào hũ), không được trả lại.
+  forfeit-bet-on-leave: true
+
+# -------------------------------------------------------------------------------------
+# Vòng đời một phiên cược
+# -------------------------------------------------------------------------------------
+#  BETTING  : mở đặt cược (betting-seconds)
+#  LOCKED   : khoá cược + đếm ngược 5..1 bằng title (lock-seconds)
+#  ROLLING  : xúc xắc quay trên title (roll-seconds)
+#  RESULT   : công bố kết quả + trả thưởng (result-seconds)
+#  WAITING  : đếm ngược trước phiên mới (next-round-delay-seconds)
+#  Sau WAITING tự động quay lại BETTING.
+# -------------------------------------------------------------------------------------
+session:
+  betting-seconds: 45
+  lock-seconds: 5
+  roll-seconds: 4
+  result-seconds: 6
+  next-round-delay-seconds: 5
+  # Số giây cuối dùng để hiện title đếm ngược (không cho đặt cược trong khoảng này vì đã LOCKED).
+  countdown-seconds: 5
+  dice:
+    # Số mặt xúc xắc. Chuẩn Tài Xỉu dùng 6.
+    sides: 6
+    # Biểu tượng 6 mặt. Có thể thay bằng ký tự khác nếu font client không hiển thị.
+    symbols: ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"]
+    # Cứ mỗi bao nhiêu tick thì đổi mặt xúc xắc khi đang quay (2 tick = 0.1 giây).
+    roll-interval-ticks: 2
+  titles:
+    # Bật/tắt toàn bộ title/subtitle của plugin (chỉ gửi cho người trong phòng).
+    enabled: true
+    fade-in-ms: 0
+    stay-ms: 900
+    fade-out-ms: 200
+
+# -------------------------------------------------------------------------------------
+# Đặt cược
+# -------------------------------------------------------------------------------------
+betting:
+  # MỖI NGƯỜI CHỈ ĐƯỢC ĐẶT MỘT VÉ TRONG MỘT PHIÊN.
+  # Không thể đặt thêm, không thể đổi Tài <-> Xỉu sau khi đã đặt.
+  # Mức cược nhỏ nhất / lớn nhất cho vé đó.
+  min: 100
+  max: 1000000
+  # Giới hạn thêm cho vé cược của một người trong phiên. 0 = không giới hạn.
+  max-per-session: 0
+  # Bước tăng/giảm khi bấm nút - / + trên GUI.
+  step: 100
+  # Mức cược mặc định khi mở GUI lần đầu.
+  default-amount: 1000
+  # Các mức đặt sẵn hiển thị ở hàng 5 của GUI (tối đa 9 mức).
+  # Người chơi bấm vào là chọn đúng mức đó, từ thấp đến cao.
+  presets: [100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000]
+
+# -------------------------------------------------------------------------------------
+# Trả thưởng / nhà cái / hũ tích luỹ
+# -------------------------------------------------------------------------------------
+#  Cách chia tiền của một phiên (khi không phải nhà cái thắng):
+#    - Tổng tiền của NGƯỜI THUA = losingPool
+#    - Trích jackpot-contribution-percent% vào hũ tích luỹ
+#    - Trích house-rake-percent% làm lãi nhà cái (nếu bật)
+#    - Phần còn lại chia cho NGƯỜI THẮNG theo TỈ LỆ SỐ TIỀN ĐẶT.
+#    - Người thắng luôn nhận lại tiền gốc + phần lời.
+#  => Đặt càng nhiều, thắng càng nhiều. Đặt ít vẫn có lời theo tỉ lệ.
+# -------------------------------------------------------------------------------------
+payout:
+  # % tiền thua được đưa vào hũ tích luỹ. 0-100.
+  jackpot-contribution-percent: 25.0
+  # Bật/tắt lãi nhà cái (công lãi).
+  house-rake-enabled: true
+  # % tiền thua bị trừ làm lãi nhà cái. 0-100.
+  house-rake-percent: 5.0
+  # Nếu true, phần lãi nhà cái cũng được cộng vào hũ thay vì biến mất.
+  rake-to-jackpot: false
+  # Bộ ba (3 xúc xắc giống nhau) => NHÀ CÁI THẮNG, mọi người mất tiền, không ai được trả.
+  # Tiền của tất cả người đặt trong phiên đó đi vào hũ tích luỹ.
+  house-win-on-triple: true
+  # Tỉ lệ % ngẫu nhiên nhà cái thắng bất kể xúc xắc. 0 = tắt. Ví dụ 1.0 = 1%.
+  house-random-chance-percent: 0.0
+
+jackpot:
+  # Bật/tắt hũ tích luỹ.
+  enabled: true
+  # Số tiền khởi tạo cho hũ khi tạo dữ liệu lần đầu.
+  starting-amount: 0
+  # Tỉ lệ % nổ hũ sau mỗi phiên CÓ người thắng. Ví dụ 3.0 = 3%.
+  explode-chance-percent: 3.0
+  # Hũ phải đạt mức này mới được phép nổ.
+  min-explode-amount: 10000
+  # Thông báo nổ hũ cho cả phòng (chỉ phòng, không broadcast server).
+  announce-to-room: true
+  # Khi nổ hũ: chia toàn bộ hũ cho NHỮNG NGƯỜI THẮNG theo tỉ lệ tiền đặt.
+  # Người thua không nhận gì. Chia đến khi hũ = 0 (không để dư).
+
+# -------------------------------------------------------------------------------------
+# Bossbar (chỉ người có tài khoản + ở trong phòng mới thấy)
+# -------------------------------------------------------------------------------------
+bossbar:
+  enabled: true
+  # Màu theo từng giai đoạn: RED, BLUE, GREEN, YELLOW, PURPLE, PINK, WHITE
+  color:
+    betting: BLUE
+    locked: YELLOW
+    rolling: PURPLE
+    result: GREEN
+    waiting: WHITE
+    idle: RED
+  # PROGRESS hoặc NOTCHED_6 / NOTCHED_10 / NOTCHED_12 / NOTCHED_20
+  overlay: PROGRESS
+  # Rút gọn số (12.5K, 1.2M) để bossbar đủ chỗ hiển thị Tài, Xỉu và Hũ.
+  compact-numbers: true
+
+# -------------------------------------------------------------------------------------
+# Âm thanh (chỉ phát cho người trong phòng / người thắng)
+# key là tên âm thanh dạng namespace của Minecraft 26.2.
+# Có thể dùng các key như: ui.button.click, block.note_block.pling, entity.player.levelup...
+# click được phát cho MỌI lần bấm nút/chọn mục trong GUI và dialog.
+# -------------------------------------------------------------------------------------
+sounds:
+  enabled: true
+  bet:          { key: "ui.button.click",          volume: 0.8, pitch: 1.2 }
+  click:        { key: "ui.button.click",          volume: 0.5, pitch: 1.0 }
+  tick:         { key: "block.note_block.hat",     volume: 0.6, pitch: 1.5 }
+  lock:         { key: "block.anvil.land",         volume: 0.7, pitch: 1.0 }
+  roll:         { key: "block.wooden_button.click_on", volume: 0.4, pitch: 1.6 }
+  session-start: { key: "block.note_block.bell",    volume: 0.8, pitch: 1.4 }
+  result:       { key: "block.note_block.chime",   volume: 0.8, pitch: 1.0 }
+  win:          { key: "entity.player.levelup",    volume: 0.9, pitch: 1.2 }
+  lose:         { key: "entity.villager.no",       volume: 0.8, pitch: 0.8 }
+  draw:         { key: "block.note_block.bass",    volume: 0.7, pitch: 1.0 }
+  jackpot:      { key: "entity.ender_dragon.growl", volume: 1.0, pitch: 1.4 }
+  exchange:     { key: "entity.experience_orb.pickup", volume: 0.7, pitch: 1.3 }
+  error:        { key: "entity.villager.no",       volume: 0.6, pitch: 1.0 }
+  leave:        { key: "ui.button.click",          volume: 0.5, pitch: 0.8 }
+
+# -------------------------------------------------------------------------------------
+# Tiền tệ & tỉ giá quy đổi
+# -------------------------------------------------------------------------------------
+#  Công thức NẠP (ngoại tệ -> BlizCoin):
+#      coins = floor(amount * rate * (1 - fee-percent/100))
+#  Công thức RÚT (BlizCoin -> ngoại tệ):
+#      cost  = ceil(amount * rate / (1 - fee-percent/100))
+#  Trong đó "amount" là số đơn vị ngoại tệ (xu, point, cấp, vật phẩm...).
+# -------------------------------------------------------------------------------------
+currencies:
+  # Tiền nội bộ dùng để đặt cược.
+  base:
+    name: "BlizCoin"
+    symbol: "⛁"
+  exchange:
+    enabled: true
+    # Phí quy đổi %, trừ vào số nhận được. 0 = miễn phí.
+    fee-percent: 0.0
+    # Cho phép đổi ngược BlizCoin -> ngoại tệ.
+    allow-withdraw: true
+    # Các mốc số lượng ngoại tệ hiện sẵn trong dialog nạp/rút.
+    # Tối đa 4 mốc; vẫn luôn có nút "Tất cả" và ô nhập tùy chỉnh.
+    presets: [100, 1000, 10000, 100000]
+  # Vault: hoạt động với EssentialsX, CMI, và mọi plugin economy có Vault provider.
+  vault:
+    enabled: true
+    display: "Xu (Vault / EssentialsX)"
+    icon: GOLD_INGOT
+    # 1 đơn vị Vault = bao nhiêu BlizCoin
+    rate: 1.0
+  # PlayerPoints: cần cài plugin PlayerPoints.
+  playerpoints:
+    enabled: true
+    display: "PlayerPoints"
+    icon: AMETHYST_SHARD
+    rate: 100.0
+  # Cấp kinh nghiệm Minecraft (level).
+  experience:
+    enabled: false
+    display: "Cấp kinh nghiệm"
+    icon: EXPERIENCE_BOTTLE
+    rate: 500.0
+  # Vật phẩm trong túi đồ. Mỗi loại có tỉ giá riêng.
+  items:
+    enabled: true
+    entries:
+      DIAMOND:
+        display: "Kim cương"
+        icon: DIAMOND
+        rate: 5000.0
+      EMERALD:
+        display: "Ngọc lục bảo"
+        icon: EMERALD
+        rate: 2500.0
+      GOLD_INGOT:
+        display: "Thỏi vàng"
+        icon: GOLD_INGOT
+        rate: 500.0
+  # Custom: dành cho các loại tiền khác (Gems, Token, CoinsEngine...).
+  # Cần PlaceholderAPI để đọc số dư. Lệnh rút/nạp chạy bằng console.
+  # Placeholder {player} = tên người chơi, {amount} = số lượng đã kiểm tra là số nguyên.
+  # CHỈ bật khi bạn biết chính xác placeholder và lệnh của plugin tiền đó.
+  custom:
+    enabled: false
+    entries:
+      gems:
+        display: "Gems"
+        icon: EMERALD
+        rate: 10.0
+        balance-placeholder: "%gems_balance%"
+        withdraw-command: "gems take {player} {amount}"
+        deposit-command: "gems give {player} {amount}"
+
+# -------------------------------------------------------------------------------------
+# Thế chấp tài sản (item) để nhận BlizCoin
+# -------------------------------------------------------------------------------------
+#  - CHỈ các vật phẩm nằm trong allowed-items mới được thế chấp.
+#  - Người chơi đưa item vào, nhận ngay principal = floor(amount * rate) BlizCoin.
+#  - Muốn lấy lại item phải trả: repay-cost = principal + interest-percent%.
+#  - Nếu quá duration-hours mà chưa trả, toàn bộ item thế chấp sẽ MẤT vĩnh viễn.
+#  - Item càng hiếm/đắt thì đặt rate càng cao. rate là số BlizCoin nhận được cho 1 item.
+#  - Item được lưu nguyên bản (kể cả enchant/NBT) để trả lại khi chuộc.
+#  - Chỉ nên đặt rate thấp hơn giá trị thực tế để tránh bị lợi dụng.
+# -------------------------------------------------------------------------------------
+collateral:
+  enabled: true
+  # Thời hạn hợp đồng. Có thể dùng số thập phân, ví dụ 0.5 = 30 phút.
+  duration-hours: 24.0
+  # Lãi phải trả khi chuộc lại item (%). 0 = chuộc đúng số tiền đã nhận.
+  interest-percent: 10.0
+  # Item có enchant được định giá cao hơn. Mỗi CẤP enchant cộng thêm % này.
+  # Ví dụ 10.0: item có Sharpness V + Unbreaking III (8 cấp) = +80% giá trị.
+  enchant-bonus-percent-per-level: 10.0
+  # Số tiền BlizCoin tối thiểu của một hợp đồng. Hợp đồng nhỏ hơn sẽ bị từ chối.
+  min-payout: 100
+  # Số hợp đồng thế chấp tối đa mỗi người được giữ cùng lúc.
+  max-contracts-per-player: 3
+  # Bao lâu tự kiểm tra hợp đồng hết hạn một lần (giây).
+  # Hợp đồng cũng được kiểm tra ngay khi mở GUI/dùng lệnh liên quan.
+  expire-check-seconds: 60
+  # Danh sách vật phẩm ĐƯỢC PHÉP thế chấp. Không có trong danh sách = không cho thế chấp.
+  allowed-items:
+    DIAMOND:
+      display: "Kim cương"
+      icon: DIAMOND
+      rate: 3000.0
+    EMERALD:
+      display: "Ngọc lục bảo"
+      icon: EMERALD
+      rate: 1500.0
+    GOLD_BLOCK:
+      display: "Khối vàng"
+      icon: GOLD_BLOCK
+      rate: 4000.0
+    NETHERITE_INGOT:
+      display: "Thỏi netherite"
+      icon: NETHERITE_INGOT
+      rate: 12000.0
+    ANCIENT_DEBRIS:
+      display: "Mảnh cổ đại"
+      icon: ANCIENT_DEBRIS
+      rate: 8000.0

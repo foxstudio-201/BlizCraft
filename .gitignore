@@ -1,0 +1,12 @@
+target/
+build/
+lib/
+.idea/
+*.iml
+*.log
+logs/
+server/
+world*/
+plugins/
+.DS_Store
+Thumbs.db

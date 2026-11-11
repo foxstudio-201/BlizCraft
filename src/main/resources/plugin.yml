@@ -1,0 +1,67 @@
+name: BlizPocket
+version: 1.0.0
+main: com.blizcraft.blizpocket.BlizPocketPlugin
+api-version: '26.2'
+description: BlizPocket - Tai Xiu (Sic Bo) casino voi BlizCoin, nhieu loai tien, Dialog API.
+author: BlizCraft
+website: https://github.com/foxstudio-201
+softdepend:
+  - Vault
+  - Essentials
+  - PlayerPoints
+  - PlaceholderAPI
+  - floodgate
+load: POSTWORLD
+
+commands:
+  taixiu:
+    description: Mo menu Tai Xiu / dat cuoc / tai khoan / doi tien.
+    aliases: [tx, btx, bliztaixiu, bp, blizpocket]
+    usage: /tx help
+    permission: bliztaixiu.use
+  taixiuadmin:
+    description: Quan tri plugin Tai Xiu.
+    aliases: [txa, btxa]
+    usage: /txa help
+    permission: bliztaixiu.admin
+
+permissions:
+  bliztaixiu.use:
+    description: Cho phep dung lenh /tx co ban.
+    default: true
+  bliztaixiu.play:
+    description: Cho phep vao phong va dat cuoc.
+    default: true
+  bliztaixiu.account:
+    description: Cho phep tao va xem tai khoan.
+    default: true
+  bliztaixiu.exchange:
+    description: Cho phep doi ngoai te sang BlizCoin va nguoc lai.
+    default: true
+  bliztaixiu.collateral:
+    description: Cho phep the chap vat pham lay BlizCoin.
+    default: true
+  bliztaixiu.admin:
+    description: Quyen quan tri tong quat (/txa).
+    default: op
+  bliztaixiu.admin.reload:
+    description: Quyen reload cau hinh.
+    default: op
+  bliztaixiu.admin.economy:
+    description: Quyen give/take/set/reset so du.
+    default: op
+  bliztaixiu.admin.jackpot:
+    description: Quyen quan ly hu tich luy.
+    default: op
+  bliztaixiu.admin.session:
+    description: Quyen dieu khien phien cuoc.
+    default: op
+  bliztaixiu.admin.stats:
+    description: Quyen xem thong ke nguoi choi.
+    default: op
+  bliztaixiu.admin.collateral:
+    description: Quyen xem/tich thu hop dong the chap.
+    default: op
+  bliztaixiu.bypass.bet-limit:
+    description: Bo qua gioi han dat cuoc (chi nen cap cho admin/test).
+    default: false
