@@ -48,6 +48,7 @@ general:
   usage-admin-stats: "<red>Dùng: <yellow>/txa stats &lt;player&gt;</yellow></red>"
   usage-admin-jackpot: "<red>Dùng: <yellow>/txa hu info|set|add|take [so_tien]</yellow></red>"
   usage-admin-collateral: "<red>Dùng: <yellow>/txa collateral &lt;player&gt;</yellow> hoặc <yellow>/txa collateral clear &lt;player&gt;</yellow></red>"
+  usage-admin-cau: "<red>Dùng: <yellow>/txa cau set &lt;d1&gt; &lt;d2&gt; &lt;d3&gt;</yellow> | <yellow>/txa cau info</yellow> | <yellow>/txa cau off</yellow> | <yellow>/txa cau clear</yellow></red>"
   admin-help-header: "<gradient:#ffd166:#ef476f><bold>═══ BlizPocket Admin ═══</bold></gradient>"
   admin-help:
     - "<yellow>/txa reload</yellow> <gray>- tải lại config/messages/tiền tệ</gray>"
@@ -64,6 +65,9 @@ general:
     - "<yellow>/txa room</yellow> <gray>- danh sách người trong phòng</gray>"
     - "<yellow>/txa collateral &lt;player&gt;</yellow> <gray>- xem hợp đồng thế chấp</gray>"
     - "<yellow>/txa collateral clear &lt;player&gt;</yellow> <gray>- tịch thu toàn bộ tài sản thế chấp</gray>"
+    - "<yellow>/txa cau set &lt;d1&gt; &lt;d2&gt; &lt;d3&gt;</yellow> <gray>- đặt kết quả xúc xắc cho phiên hiện tại/kế tiếp</gray>"
+    - "<yellow>/txa cau info|off</yellow> <gray>- xem/huỷ cầu đang đặt</gray>"
+    - "<yellow>/txa cau clear</yellow> <gray>- xoá lịch sử cầu, reset cầu về 0</gray>"
 
 phase:
   betting: "ĐANG MỞ CƯỢC"
@@ -154,6 +158,15 @@ session:
   refunded: "<green>Đã hoàn lại <gold>{amount} {symbol}</gold> tiền cược phiên bị huỷ.</green>"
   no-session: "<red>Hiện không có phiên cược nào.</red>"
   started-admin: "<green>Đã bắt đầu phiên mới.</green>"
+
+cau:
+  admin-set: "<green>Đã đặt cầu cho phiên <white>#{session}</white>: <yellow>{dice}</yellow> <dark_gray>(chỉ admin thấy)</dark_gray></green>"
+  admin-info: "<gray>Cầu đang đặt cho phiên <white>#{session}</white>: <yellow>{dice}</yellow></gray>"
+  admin-none: "<gray>Chưa có cầu nào được đặt.</gray>"
+  admin-off: "<yellow>Đã huỷ cầu đang đặt.</yellow>"
+  admin-cleared: "<green>Đã xoá lịch sử cầu (<white>{count}</white> phiên). Cầu đã reset về 0.</green>"
+  admin-empty: "<gray>Lịch sử cầu đã trống, không cần xoá.</gray>"
+  invalid-dice: "<red>Cầu không hợp lệ: mỗi xúc xắc phải từ <white>1</white> đến <white>{sides}</white>.</red>"
 
 jackpot:
   info: "<gray>Hũ tích luỹ hiện tại: <gold>{jackpot} {symbol}</gold></gray>"

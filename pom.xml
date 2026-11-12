@@ -6,7 +6,7 @@
 
     <groupId>com.blizcraft</groupId>
     <artifactId>blizpocket</artifactId>
-    <version>1.0.3</version>
+    <version>1.1.0</version>
     <name>BlizPocket</name>
     <description>Tai Xiu (Sic Bo) plugin for Paper 26.2 with BlizCoin, Java dialogs, Bedrock forms, currencies and collateral.</description>
 

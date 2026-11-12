@@ -117,7 +117,9 @@ public final class GameManager {
         if (session == null) return;
         switch (session.phase()) {
             case BETTING -> {
-                pendingDice = Dice.roll(settings.diceSides, 3);
+                int[] forced = data.forcedDice();
+                pendingDice = forced != null ? forced : Dice.roll(settings.diceSides, 3);
+                if (forced != null) data.forcedDice(null);
                 session.setPhase(Session.Phase.ROLLING, now, settings.rollSeconds * 1000L);
                 session.dice(Dice.roll(settings.diceSides, 3));
                 lastRollAt = 0;
@@ -604,7 +606,9 @@ public final class GameManager {
             updateBossbars(now);
             return true;
         }
-        session.dice(Dice.roll(settings.diceSides, 3));
+        int[] forced = data.forcedDice();
+        session.dice(forced != null ? forced : Dice.roll(settings.diceSides, 3));
+        if (forced != null) data.forcedDice(null);
         session.setPhase(Session.Phase.RESULT, now, settings.resultSeconds * 1000L);
         resolve(now);
         updateBossbars(now);
@@ -851,6 +855,21 @@ public final class GameManager {
 
     public Set<UUID> roomIds() {
         return Set.copyOf(room);
+    }
+
+    public void forcedDice(int[] dice) {
+        data.forcedDice(dice);
+    }
+
+    public int[] forcedDice() {
+        return data.forcedDice();
+    }
+
+    public long forcedDiceSessionId() {
+        if (session != null && session.phase() == Session.Phase.BETTING && !session.resolved()) {
+            return session.id();
+        }
+        return data.peekNextSessionId();
     }
 
     public String formatDice(int[] dice) {

@@ -106,6 +106,8 @@ Quy đổi hai chiều:
 - Give/take/set/reset số dư.
 - Quản lý hũ.
 - Kết thúc/hủy/bắt đầu phiên.
+- Đặt cầu (ép kết quả xúc xắc) cho phiên hiện tại hoặc phiên kế tiếp; thông báo chỉ gửi cho admin.
+- Xóa lịch sử cầu để reset cầu về 0.
 - Xem thống kê, danh sách phòng, hợp đồng thế chấp.
 
 ---
@@ -126,7 +128,7 @@ Quy đổi hai chiều:
 
 ## Cài đặt nhanh
 
-1. Tải `BlizPocket-1.0.3.jar` từ repo hoặc build từ source.
+1. Tải `BlizPocket-1.1.0.jar` từ repo hoặc build từ source.
 2. Bỏ vào `plugins/`.
 3. Cài các dependency cần dùng (Vault/EssentialsX, PlayerPoints, Geyser/Floodgate...).
 4. Khởi động server.
@@ -167,7 +169,7 @@ mvn clean package
 Jar đầu ra:
 
 ```text
-target/BlizPocket-1.0.3.jar
+target/BlizPocket-1.1.0.jar
 ```
 
 Repo không chứa thư viện server, jar Paper hay dữ liệu chạy thử.
@@ -221,6 +223,10 @@ Alias: `/tx`, `/btx`, `/bliztaixiu`, `/bp`, `/blizpocket`.
 | `/txa room` | Danh sách người trong phòng |
 | `/txa collateral <player>` | Xem hợp đồng thế chấp |
 | `/txa collateral clear <player>` | Tịch thu toàn bộ tài sản thế chấp |
+| `/txa cau set <d1> <d2> <d3>` | Đặt cầu cho phiên hiện tại/kế tiếp (vd: `3 3 3`) |
+| `/txa cau info` | Xem cầu đang đặt |
+| `/txa cau off` | Hủy cầu đang đặt |
+| `/txa cau clear` | Xóa lịch sử cầu, reset cầu về 0 |
 | `/txa help` | Trợ giúp admin |
 
 ---
@@ -240,6 +246,7 @@ Alias: `/tx`, `/btx`, `/bliztaixiu`, `/bp`, `/blizpocket`.
 | `bliztaixiu.admin.economy` | op | Sửa số dư |
 | `bliztaixiu.admin.jackpot` | op | Quản lý hũ |
 | `bliztaixiu.admin.session` | op | Điều khiển phiên |
+| `bliztaixiu.admin.cau` | op | Đặt cầu / xóa lịch sử cầu |
 | `bliztaixiu.admin.stats` | op | Xem thống kê |
 | `bliztaixiu.admin.collateral` | op | Quản lý thế chấp |
 | `bliztaixiu.bypass.bet-limit` | false | Bỏ giới hạn cược |
@@ -340,8 +347,8 @@ Chi tiết: [Bedrock Setup](https://github.com/foxstudio-201/BlizCraft/wiki/Bedr
 - Workflow `.github/workflows/release.yml` build Maven và tạo GitHub Release theo tag/version.
 - Phát hành bằng tag:
   ```bash
-  git tag v1.0.4
-  git push origin v1.0.4
+  git tag v1.1.1
+  git push origin v1.1.1
   ```
 - Hoặc chạy tay: **Actions → Release → Run workflow**.
 - Plugin kiểm tra bản mới **một lần khi server khởi động xong** bằng `ServerLoadEvent` (`STARTUP`), không polling định kỳ. Restart server sẽ kiểm tra lại.

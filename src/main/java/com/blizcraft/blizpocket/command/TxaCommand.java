@@ -21,7 +21,7 @@ import java.util.UUID;
 
 public final class TxaCommand implements CommandExecutor, TabCompleter {
     private static final List<String> SUBCOMMANDS = List.of(
-            "reload", "save", "give", "take", "set", "reset", "hu", "forceend", "cancel", "start", "stats", "room", "collateral", "help"
+            "reload", "save", "give", "take", "set", "reset", "hu", "forceend", "cancel", "start", "stats", "room", "collateral", "cau", "help"
     );
 
     private final BlizPocketPlugin plugin;
@@ -155,6 +155,7 @@ public final class TxaCommand implements CommandExecutor, TabCompleter {
                 sendStats(sender, account);
             }
             case "collateral", "thechap" -> collateralCommand(sender, args);
+            case "cau" -> cauCommand(sender, args);
             case "room", "list" -> sendRoom(sender);
             case "help" -> sendHelp(sender);
             default -> plugin.getMessages().send(sender, "general.unknown-command");
@@ -278,6 +279,74 @@ public final class TxaCommand implements CommandExecutor, TabCompleter {
         }
     }
 
+    private void cauCommand(CommandSender sender, String[] args) {
+        if (!require(sender, "bliztaixiu.admin.cau")) return;
+        if (args.length < 2) {
+            sender.sendMessage(Text.mm(plugin.getMessages().raw("general.usage-admin-cau")));
+            return;
+        }
+        String action = args[1].toLowerCase(Locale.ROOT);
+        switch (action) {
+            case "set", "dat" -> {
+                if (args.length < 5) {
+                    sender.sendMessage(Text.mm(plugin.getMessages().raw("general.usage-admin-cau")));
+                    return;
+                }
+                int sides = plugin.getSettings().diceSides;
+                int[] dice = new int[3];
+                for (int i = 0; i < 3; i++) {
+                    try {
+                        dice[i] = Integer.parseInt(args[i + 2]);
+                    } catch (NumberFormatException e) {
+                        plugin.getMessages().send(sender, "cau.invalid-dice", Messages.ph("sides", sides));
+                        return;
+                    }
+                    if (dice[i] < 1 || dice[i] > sides) {
+                        plugin.getMessages().send(sender, "cau.invalid-dice", Messages.ph("sides", sides));
+                        return;
+                    }
+                }
+                plugin.getGame().forcedDice(dice);
+                plugin.getMessages().send(sender, "cau.admin-set", Messages.ph(
+                        "session", plugin.getGame().forcedDiceSessionId(),
+                        "dice", diceText(dice)
+                ));
+                plugin.getDataStore().logTransaction("ADMIN " + sender.getName() + " cau set " + diceText(dice));
+            }
+            case "info" -> {
+                int[] dice = plugin.getGame().forcedDice();
+                if (dice == null) {
+                    plugin.getMessages().send(sender, "cau.admin-none");
+                } else {
+                    plugin.getMessages().send(sender, "cau.admin-info", Messages.ph(
+                            "session", plugin.getGame().forcedDiceSessionId(),
+                            "dice", diceText(dice)
+                    ));
+                }
+            }
+            case "off", "huy" -> {
+                plugin.getGame().forcedDice(null);
+                plugin.getMessages().send(sender, "cau.admin-off");
+                plugin.getDataStore().logTransaction("ADMIN " + sender.getName() + " cau off");
+            }
+            case "clear", "reset", "xoa" -> {
+                int count = plugin.getDataStore().clearSessions();
+                if (count > 0) {
+                    plugin.getMessages().send(sender, "cau.admin-cleared", Messages.ph("count", count));
+                    plugin.getDataStore().logTransaction("ADMIN " + sender.getName()
+                            + " cleared road history sessions=" + count);
+                } else {
+                    plugin.getMessages().send(sender, "cau.admin-empty");
+                }
+            }
+            default -> sender.sendMessage(Text.mm(plugin.getMessages().raw("general.usage-admin-cau")));
+        }
+    }
+
+    private static String diceText(int[] dice) {
+        return dice[0] + " " + dice[1] + " " + dice[2];
+    }
+
     private void sendRoom(CommandSender sender) {
         var ids = plugin.getGame().roomIds();
         plugin.getMessages().raw(sender, "room.member-list-header", Messages.ph("count", ids.size()));
@@ -325,8 +394,14 @@ public final class TxaCommand implements CommandExecutor, TabCompleter {
                     options.add("clear");
                     yield filter(options, args[1]);
                 }
+                case "cau" -> filter(List.of("set", "info", "off", "clear"), args[1]);
                 default -> List.of();
             };
+        }
+        if (args.length >= 3 && args.length <= 5
+                && args[0].equalsIgnoreCase("cau")
+                && (args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("dat"))) {
+            return filter(diceOptions(), args[args.length - 1]);
         }
         if (args.length == 3) {
             if (args[0].equalsIgnoreCase("collateral") && args[1].equalsIgnoreCase("clear")) {
@@ -347,6 +422,12 @@ public final class TxaCommand implements CommandExecutor, TabCompleter {
             if (!names.contains(account.name())) names.add(account.name());
         }
         return names;
+    }
+
+    private List<String> diceOptions() {
+        List<String> options = new ArrayList<>();
+        for (int i = 1; i <= plugin.getSettings().diceSides; i++) options.add(Integer.toString(i));
+        return options;
     }
 
     private static List<String> filter(List<String> options, String prefix) {

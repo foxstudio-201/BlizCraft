@@ -42,6 +42,7 @@ public final class DataStore {
     private long jackpot;
     private long nextSessionId = 1;
     private int maxSessions = 300;
+    private int[] forcedDice;
 
     public DataStore(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -56,6 +57,7 @@ public final class DataStore {
         maxSessions = settings.maxSessions;
         jackpot = settings.jackpotStart;
         nextSessionId = 1;
+        forcedDice = null;
 
         if (accountsFile.exists()) {
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(accountsFile);
@@ -112,6 +114,10 @@ public final class DataStore {
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(sessionsFile);
             jackpot = Math.max(0, yaml.getLong("jackpot", settings.jackpotStart));
             nextSessionId = Math.max(1, yaml.getLong("next-id", 1));
+            List<Integer> forced = yaml.getIntegerList("forced-dice");
+            forcedDice = forced.size() == 3
+                    ? new int[]{forced.get(0), forced.get(1), forced.get(2)}
+                    : null;
             List<Map<?, ?>> rawSessions = yaml.getMapList("sessions");
             for (Map<?, ?> map : rawSessions) {
                 try {
@@ -206,6 +212,26 @@ public final class DataStore {
 
     public long nextSessionId() {
         return nextSessionId++;
+    }
+
+    public long peekNextSessionId() {
+        return nextSessionId;
+    }
+
+    public int[] forcedDice() {
+        return forcedDice == null ? null : forcedDice.clone();
+    }
+
+    public void forcedDice(int[] dice) {
+        this.forcedDice = dice == null ? null : dice.clone();
+        saveAsync();
+    }
+
+    public int clearSessions() {
+        int count = sessions.size();
+        sessions.clear();
+        saveAsync();
+        return count;
     }
 
     public long jackpot() {
@@ -314,6 +340,11 @@ public final class DataStore {
         YamlConfiguration yaml = new YamlConfiguration();
         yaml.set("next-id", nextSessionId);
         yaml.set("jackpot", jackpot);
+        if (forcedDice != null) {
+            List<Integer> forced = new ArrayList<>();
+            for (int value : forcedDice) forced.add(value);
+            yaml.set("forced-dice", forced);
+        }
         List<Map<String, Object>> list = new ArrayList<>();
         for (SessionRecord record : sessions) {
             Map<String, Object> entry = new LinkedHashMap<>();

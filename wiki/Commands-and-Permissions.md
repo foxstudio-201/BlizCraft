@@ -71,8 +71,21 @@ Alias: `/txa`, `/btxa`.
 | `/txa room` | Danh sách người trong phòng |
 | `/txa collateral <player>` | Xem hợp đồng thế chấp |
 | `/txa collateral clear <player>` | Tịch thu toàn bộ tài sản thế chấp |
+| `/txa cau set <d1> <d2> <d3>` | Ép kết quả xúc xắc cho phiên hiện tại hoặc phiên kế tiếp (vd: `3 3 3`) |
+| `/txa cau info` | Xem cầu đang đặt |
+| `/txa cau off` | Hủy cầu đang đặt |
+| `/txa cau clear` | Xóa lịch sử cầu, reset cầu về 0 |
 
 Admin có thể dùng từ console, trừ các lệnh yêu cầu người chơi trực tiếp.
+
+### Đặt cầu
+
+- `/txa cau set <d1> <d2> <d3>` ép xúc xắc của **phiên đang mở cược**; nếu đặt lúc phiên đã quay thì áp dụng cho **phiên kế tiếp**.
+- Mỗi xúc xắc phải trong khoảng `1..session.dice.sides`.
+- Đặt lại sẽ thay cầu cũ. Cầu được lưu xuống `sessions.yml`, dùng một lần rồi tự xóa.
+- Thông báo đặt cầu **chỉ gửi cho người chạy lệnh** (admin/console); người chơi không thấy.
+- `/txa cau off` hủy cầu chưa dùng.
+- `/txa cau clear` xóa toàn bộ lịch sử phiên dùng để vẽ cầu; cầu trở về 0 (trống). Hũ, số dư và lịch sử cá nhân của người chơi **không bị ảnh hưởng**.
 
 ---
 
@@ -91,6 +104,7 @@ Admin có thể dùng từ console, trừ các lệnh yêu cầu người chơi 
 | `bliztaixiu.admin.economy` | op | Give/take/set/reset |
 | `bliztaixiu.admin.jackpot` | op | Quản lý hũ |
 | `bliztaixiu.admin.session` | op | Forceend/cancel/start |
+| `bliztaixiu.admin.cau` | op | Đặt cầu / xem / hủy / xóa lịch sử cầu |
 | `bliztaixiu.admin.stats` | op | Xem stats |
 | `bliztaixiu.admin.collateral` | op | Quản lý thế chấp |
 | `bliztaixiu.bypass.bet-limit` | false | Bỏ giới hạn cược |
